@@ -29,7 +29,7 @@
 ## Phase 1: Foundation
 
 ### Task 1 — Initialize project structure and dependencies
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** —
 - **Details:**
   - Create directory structure: `src/pdna/`, `tests/`, `configs/`, `scripts/`, `notebooks/`, `data/`
@@ -39,7 +39,7 @@
   - Initialize git repo
 
 ### Task 2 — Implement baseline LTC model
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #1
 - **Details:**
   - Install and verify `ncps` library (LTC/CfC implementations)
@@ -53,7 +53,7 @@
 ## Phase 2: Pulse Module
 
 ### Task 3 — Implement PulseLTCCell with oscillatory pulse generator
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #2
 - **Details:**
   - Create `PulseLTCCell` class extending base LTC cell
@@ -67,7 +67,7 @@
   - Gradient clipping and pulse magnitude regularization for stability
 
 ### Task 4 — Implement idle-time tick simulation
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #3
 - **Details:**
   - Create `run_idle_ticks(h, num_ticks, t_start, dt)` method
@@ -78,7 +78,7 @@
   - Add state norm regularization to prevent idle state divergence
 
 ### Task 5 — Build all 6 ablation architecture variants
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #3, #4
 - **Details:**
   - **A.** Baseline LTC (no pulse, no self-attend)
@@ -90,7 +90,7 @@
   - Config system: identical hyperparameters (hidden_size=128, num_layers=4, dropout=0.1, lr=1e-3, batch_size=32, max_epochs=50) except architectural differences
 
 ### Task 6 — Write unit tests for pulse components
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #3, #4
 - **Details:**
   - Test PulseLTCCell forward pass shape correctness
@@ -107,7 +107,7 @@
 ## Phase 3: Data & Evaluation Infrastructure
 
 ### Task 7 — Set up LRA data pipeline (ListOps first)
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #1
 - **Details:**
   - Download/generate ListOps dataset (96K train / 2K val / 2K test, ~2K token sequences)
@@ -118,7 +118,7 @@
   - All dataloaders: batch_size=32, proper train/val/test splits
 
 ### Task 8 — Implement Gapped-LRA benchmark variant
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #7
 - **Details:**
   - For each LRA task, create 5 gap difficulty levels:
@@ -132,7 +132,7 @@
   - Compute "Degradation" = (Gap 0% acc − Gap 30% acc)
 
 ### Task 9 — Build training and evaluation framework
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #5, #7
 - **Details:**
   - Training loop: AdamW optimizer, cosine annealing with warmup

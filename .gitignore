@@ -12,3 +12,4 @@ wandb/
 runs/
 *.log
 .DS_Store
+.env
