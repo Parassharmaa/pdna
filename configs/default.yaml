@@ -1,0 +1,27 @@
+# Default hyperparameters shared across all variants
+model:
+  hidden_size: 128
+  num_layers: 1
+  dropout: 0.1
+  ode_unfolds: 6
+  alpha_init: 0.01
+  beta_init: 0.01
+  idle_ticks_per_gap: 10
+
+training:
+  lr: 1.0e-3
+  weight_decay: 0.01
+  batch_size: 32
+  max_epochs: 50
+  warmup_epochs: 5
+  grad_clip_norm: 1.0
+  seeds: [42, 123, 456]
+  early_stopping_patience: 10
+
+data:
+  max_seq_len: 2048
+
+logging:
+  backend: "wandb"  # or "tensorboard"
+  project: "pdna-ablation"
+  log_every_n_steps: 50
