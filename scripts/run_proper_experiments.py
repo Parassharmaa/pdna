@@ -129,43 +129,43 @@ class FloatGappedWrapper(Dataset):
 
 TASKS = {
     "smnist": {
-        "input_size": 4,    # 4 pixels per chunk
+        "input_size": 28,   # 28 pixels per row (row-by-row MNIST)
         "output_size": 10,
-        "seq_len": 196,     # 784/4
+        "seq_len": 28,      # 28 rows = 28 steps
     },
     "pmnist": {
-        "input_size": 4,
+        "input_size": 28,
         "output_size": 10,
-        "seq_len": 196,
+        "seq_len": 28,
     },
     "adding": {
         "input_size": 2,
         "output_size": 2,
-        "seq_len": 100,
+        "seq_len": 50,
     },
 }
 
 
 def get_data(task_name, batch_size, seed):
     if task_name == "smnist":
-        train_ds = ChunkedMNIST(train=True, chunk_size=4)
-        test_ds = ChunkedMNIST(train=False, chunk_size=4)
+        train_ds = ChunkedMNIST(train=True, chunk_size=28)  # 28 rows of 28px
+        test_ds = ChunkedMNIST(train=False, chunk_size=28)
         # Split train into train/val (54000/6000)
         train_ds, val_ds = torch.utils.data.random_split(
             train_ds, [54000, 6000],
             generator=torch.Generator().manual_seed(seed),
         )
     elif task_name == "pmnist":
-        train_ds = ChunkedMNIST(train=True, chunk_size=4, permute=True, perm_seed=0)
-        test_ds = ChunkedMNIST(train=False, chunk_size=4, permute=True, perm_seed=0)
+        train_ds = ChunkedMNIST(train=True, chunk_size=28, permute=True, perm_seed=0)
+        test_ds = ChunkedMNIST(train=False, chunk_size=28, permute=True, perm_seed=0)
         train_ds, val_ds = torch.utils.data.random_split(
             train_ds, [54000, 6000],
             generator=torch.Generator().manual_seed(seed),
         )
     elif task_name == "adding":
-        train_ds = AddingProblem(n_samples=20000, seq_len=100, seed=seed)
-        val_ds = AddingProblem(n_samples=2000, seq_len=100, seed=seed + 1000)
-        test_ds = AddingProblem(n_samples=2000, seq_len=100, seed=seed + 2000)
+        train_ds = AddingProblem(n_samples=20000, seq_len=50, seed=seed)
+        val_ds = AddingProblem(n_samples=2000, seq_len=50, seed=seed + 1000)
+        test_ds = AddingProblem(n_samples=2000, seq_len=50, seed=seed + 2000)
     else:
         raise ValueError(task_name)
 
@@ -213,11 +213,11 @@ def main():
     cfg = ExperimentConfig()
     cfg.model.hidden_size = 128
     cfg.training.max_epochs = 80
-    cfg.training.batch_size = 256
+    cfg.training.batch_size = 512
     cfg.training.warmup_epochs = 5
     cfg.training.early_stopping_patience = 15
-    cfg.training.lr = 3e-4
-    cfg.training.grad_clip_norm = 0.5
+    cfg.training.lr = 5e-4
+    cfg.training.grad_clip_norm = 1.0
 
     baselines_ok = {}
     thresholds = {"smnist": 0.95, "pmnist": 0.85, "adding": 0.85}

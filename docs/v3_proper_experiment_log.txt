@@ -1,0 +1,53 @@
+Device: cuda
+GPU: NVIDIA RTX A4000
+VRAM: 16.8 GB
+
+============================================================
+PHASE 1: BASELINE VALIDATION
+============================================================
+
+--- Validating baseline on smnist (threshold: 95%) ---
+Training baseline_smnist_validate on cuda
+  Model params: 87,434
+  Epochs: 80
+  Batch size: 512
+  Epoch   1/80 | Train Loss: 2.1688 Acc: 0.2129 | Val Loss: 1.8162 Acc: 0.3338 | LR: 1.00e-04 | Time: 8.8s
+  Epoch   2/80 | Train Loss: 1.4795 Acc: 0.4900 | Val Loss: 1.2970 Acc: 0.5665 | LR: 2.00e-04 | Time: 8.0s
+  Epoch   3/80 | Train Loss: 1.1011 Acc: 0.6376 | Val Loss: 0.9443 Acc: 0.6868 | LR: 3.00e-04 | Time: 8.0s
+  Epoch   4/80 | Train Loss: 0.8531 Acc: 0.7157 | Val Loss: 0.7897 Acc: 0.7372 | LR: 4.00e-04 | Time: 8.1s
+  Epoch   5/80 | Train Loss: 0.7250 Acc: 0.7585 | Val Loss: 0.7557 Acc: 0.7477 | LR: 5.00e-04 | Time: 7.9s
+  Epoch   6/80 | Train Loss: 0.6221 Acc: 0.7983 | Val Loss: 0.6137 Acc: 0.7963 | LR: 5.00e-04 | Time: 8.4s
+  Epoch   7/80 | Train Loss: 0.4901 Acc: 0.8476 | Val Loss: 0.4116 Acc: 0.8795 | LR: 4.99e-04 | Time: 8.2s
+  Epoch   8/80 | Train Loss: 0.3870 Acc: 0.8888 | Val Loss: 0.3717 Acc: 0.8937 | LR: 4.98e-04 | Time: 8.9s
+  Epoch   9/80 | Train Loss: 0.3118 Acc: 0.9119 | Val Loss: 0.2966 Acc: 0.9157 | LR: 4.96e-04 | Time: 9.2s
+  Epoch  10/80 | Train Loss: 0.2644 Acc: 0.9261 | Val Loss: 0.3375 Acc: 0.8975 | LR: 4.95e-04 | Time: 8.5s
+  Epoch  11/80 | Train Loss: 0.2485 Acc: 0.9295 | Val Loss: 0.2643 Acc: 0.9267 | LR: 4.92e-04 | Time: 8.5s
+  Epoch  12/80 | Train Loss: 0.2094 Acc: 0.9420 | Val Loss: 0.2079 Acc: 0.9433 | LR: 4.89e-04 | Time: 8.9s
+  Epoch  13/80 | Train Loss: 0.1904 Acc: 0.9471 | Val Loss: 0.1856 Acc: 0.9485 | LR: 4.86e-04 | Time: 8.5s
+  Epoch  14/80 | Train Loss: 0.1678 Acc: 0.9533 | Val Loss: 0.2034 Acc: 0.9412 | LR: 4.82e-04 | Time: 8.9s
+  Epoch  15/80 | Train Loss: 0.1559 Acc: 0.9561 | Val Loss: 0.1652 Acc: 0.9517 | LR: 4.78e-04 | Time: 8.7s
+  Epoch  16/80 | Train Loss: 0.1419 Acc: 0.9605 | Val Loss: 0.1539 Acc: 0.9558 | LR: 4.74e-04 | Time: 8.6s
+  Epoch  17/80 | Train Loss: 0.1313 Acc: 0.9627 | Val Loss: 0.1521 Acc: 0.9578 | LR: 4.69e-04 | Time: 8.1s
+  Epoch  18/80 | Train Loss: 0.1195 Acc: 0.9664 | Val Loss: 0.1389 Acc: 0.9597 | LR: 4.64e-04 | Time: 8.3s
+  Epoch  19/80 | Train Loss: 0.1120 Acc: 0.9682 | Val Loss: 0.1260 Acc: 0.9657 | LR: 4.58e-04 | Time: 8.3s
+  Epoch  20/80 | Train Loss: 0.1105 Acc: 0.9685 | Val Loss: 0.1178 Acc: 0.9672 | LR: 4.52e-04 | Time: 8.6s
+  Epoch  21/80 | Train Loss: 0.0974 Acc: 0.9731 | Val Loss: 0.1183 Acc: 0.9678 | LR: 4.46e-04 | Time: 8.4s
+  Epoch  22/80 | Train Loss: 0.0944 Acc: 0.9730 | Val Loss: 0.1210 Acc: 0.9672 | LR: 4.39e-04 | Time: 8.4s
+  Epoch  23/80 | Train Loss: 0.0888 Acc: 0.9745 | Val Loss: 0.1035 Acc: 0.9728 | LR: 4.32e-04 | Time: 8.3s
+  Epoch  24/80 | Train Loss: 0.0838 Acc: 0.9766 | Val Loss: 0.1075 Acc: 0.9690 | LR: 4.25e-04 | Time: 8.1s
+  Epoch  25/80 | Train Loss: 0.0817 Acc: 0.9770 | Val Loss: 0.1262 Acc: 0.9628 | LR: 4.17e-04 | Time: 8.4s
+  Epoch  26/80 | Train Loss: 0.0737 Acc: 0.9796 | Val Loss: 0.1259 Acc: 0.9668 | LR: 4.09e-04 | Time: 8.1s
+  Epoch  27/80 | Train Loss: 0.0706 Acc: 0.9799 | Val Loss: 0.1063 Acc: 0.9718 | LR: 4.01e-04 | Time: 7.9s
+  Epoch  28/80 | Train Loss: 0.0681 Acc: 0.9807 | Val Loss: 0.0879 Acc: 0.9772 | LR: 3.93e-04 | Time: 8.3s
+  Epoch  29/80 | Train Loss: 0.0635 Acc: 0.9818 | Val Loss: 0.0978 Acc: 0.9748 | LR: 3.84e-04 | Time: 8.9s
+  Epoch  30/80 | Train Loss: 0.0589 Acc: 0.9837 | Val Loss: 0.0996 Acc: 0.9732 | LR: 3.75e-04 | Time: 8.5s
+  Epoch  31/80 | Train Loss: 0.0592 Acc: 0.9830 | Val Loss: 0.0905 Acc: 0.9747 | LR: 3.66e-04 | Time: 8.1s
+  Epoch  32/80 | Train Loss: 0.0557 Acc: 0.9835 | Val Loss: 0.0892 Acc: 0.9772 | LR: 3.56e-04 | Time: 8.2s
+  Epoch  33/80 | Train Loss: 0.0513 Acc: 0.9851 | Val Loss: 0.0911 Acc: 0.9745 | LR: 3.47e-04 | Time: 7.9s
+  Epoch  34/80 | Train Loss: 0.0518 Acc: 0.9854 | Val Loss: 0.0891 Acc: 0.9765 | LR: 3.37e-04 | Time: 7.9s
+
+Notes:
+- Experiment was killed before completion (stale process cleanup)
+- sMNIST baseline validation reached 97.72% val accuracy by epoch 28-32
+- This validates CfC can achieve >95% on sequential MNIST
+- Used row-by-row MNIST (28 steps of 28 pixels) with CfC hidden=128
