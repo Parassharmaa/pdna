@@ -323,7 +323,7 @@ def _build_report(ablation, degradation, stat_tests, deg_stats, overhead,
     ])
 
     for task, ratio in success.get("degradation_ratios", {}).items():
-        better = "LESS" if ratio < 1.0 else "MORE"
+        better = "MORE" if ratio < 1.0 else "LESS"
         lines.append(f"- **{task}**: PDNA degradation = {ratio:.2f}x baseline ({better} robust)")
     lines.append("")
 
