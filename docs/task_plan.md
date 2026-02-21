@@ -218,6 +218,42 @@
 
 ---
 
+## Phase 6: Extended Experiments & Paper (v5)
+
+### Task 14 — Extended experiments for publishability
+- **Status:** 🔄 running
+- **Blocked by:** #10
+- **Details:**
+  - Addressing peer review gaps: n=2 seeds → n=5, more tasks, deeper analysis
+  - **Tasks:** sMNIST (28 steps), psMNIST (784 steps), sCIFAR-10 (1024 steps)
+  - **Seeds:** 5 per config (42, 123, 456, 789, 1337)
+  - **Variants:** 5 (dropped F/full_idle since identical to E)
+  - **Total runs:** 5 × 3 × 5 = 75 runs on RunPod RTX A4000
+  - Saves model checkpoints for post-hoc analysis
+  - Extracts pulse parameters (omega, amplitude, alpha, beta)
+  - Computes state norms during gap vs non-gap positions
+  - Script: `scripts/run_extended_ablation.py`
+
+### Task 15 — Write arXiv paper
+- **Status:** 🔄 in progress
+- **Blocked by:** #14
+- **Details:**
+  - Full LaTeX paper: abstract, intro, related work, method, experiments, results, discussion, conclusion
+  - 20+ citations (CfC, Neural ODEs, S4, neural oscillations, LRA)
+  - Auto-generated tables via `scripts/populate_paper.py`
+  - Publication-quality figures via `scripts/generate_paper_figures.py`
+  - Paper: `paper/main.tex`, `paper/references.bib`
+
+### Task 16 — Update technical report and push to GitHub
+- **Status:** ⏳ pending
+- **Blocked by:** #14, #15
+- **Details:**
+  - Regenerate technical report with v5 results (3 tasks, 5 seeds)
+  - Update README with new results
+  - Push all changes including paper
+
+---
+
 ## Success Criteria
 
 | Level | Criteria |
@@ -231,6 +267,8 @@
 
 ## Estimated Compute
 
-- 6 variants × 5 tasks × 3 seeds = **90 total training runs**
-- ~50–75 GPU hours total on a single A100
-- ~3–4 days continuous, or ~1 day with 4 GPUs
+### v4 (completed)
+- 6 variants × 2 tasks × 2 seeds = **24 runs** (~2 hours on RTX A4000)
+
+### v5 (running)
+- 5 variants × 3 tasks × 5 seeds = **75 runs** (~6-8 hours on RTX A4000)
