@@ -1,4 +1,4 @@
-"""Results loading and aggregation for PDNA experiments."""
+"""Results loading, aggregation, and statistical analysis for PDNA experiments."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+from scipy import stats
 
 
 def load_all_results(runs_dir: str = "runs") -> dict:
@@ -161,3 +162,166 @@ def format_degradation_table(table: dict, tasks: list[str] | None = None, varian
         lines.append(row)
 
     return "\n".join(lines)
+
+
+def compute_statistical_tests(results: dict) -> dict:
+    """Compute pairwise statistical tests between variants.
+
+    For each task, computes:
+    - Paired t-test (PDNA vs baseline, pulse vs noise)
+    - Cohen's d effect size
+    - 95% confidence intervals for differences
+
+    Returns dict with test results per task.
+    """
+    comparisons = [
+        ("full_pdna", "baseline", "PDNA vs Baseline"),
+        ("pulse", "noise", "Pulse vs Noise"),
+        ("full_pdna", "pulse", "Full PDNA vs Pulse-only"),
+        ("full_idle", "full_pdna", "Idle vs PDNA"),
+        ("self_attend", "baseline", "SelfAttend vs Baseline"),
+    ]
+
+    # Group results by (variant, task, seed)
+    grouped: dict[tuple[str, str], list[tuple[int, float]]] = {}
+    for key, data in results.items():
+        if "error" in data or "test_acc" not in data:
+            continue
+        variant, task, seed = _parse_run_key(key)
+        grouped.setdefault((variant, task), []).append((seed, data["test_acc"]))
+
+    tasks = sorted({t for _, t in grouped.keys()})
+    stat_results = {}
+
+    for task in tasks:
+        task_stats = {}
+        for v1, v2, label in comparisons:
+            vals1 = sorted(grouped.get((v1, task), []))
+            vals2 = sorted(grouped.get((v2, task), []))
+
+            if len(vals1) < 2 or len(vals2) < 2:
+                continue
+
+            a = np.array([v for _, v in vals1])
+            b = np.array([v for _, v in vals2])
+
+            # Paired t-test (if same seeds, pair them)
+            if len(a) == len(b):
+                t_stat, p_value = stats.ttest_rel(a, b)
+            else:
+                t_stat, p_value = stats.ttest_ind(a, b)
+
+            # Cohen's d
+            diff = a - b if len(a) == len(b) else None
+            if diff is not None and np.std(diff) > 0:
+                cohens_d = float(np.mean(diff) / np.std(diff))
+            else:
+                pooled_std = np.sqrt((np.var(a) + np.var(b)) / 2)
+                cohens_d = float((np.mean(a) - np.mean(b)) / pooled_std) if pooled_std > 0 else 0.0
+
+            # 95% CI for mean difference
+            mean_diff = float(np.mean(a) - np.mean(b))
+            if diff is not None:
+                se = float(np.std(diff, ddof=1) / np.sqrt(len(diff)))
+            else:
+                se = float(np.sqrt(np.var(a, ddof=1)/len(a) + np.var(b, ddof=1)/len(b)))
+            ci_95 = (mean_diff - 1.96 * se, mean_diff + 1.96 * se)
+
+            task_stats[label] = {
+                "v1_mean": float(np.mean(a)),
+                "v2_mean": float(np.mean(b)),
+                "mean_diff": mean_diff,
+                "t_stat": float(t_stat),
+                "p_value": float(p_value),
+                "cohens_d": cohens_d,
+                "ci_95_low": ci_95[0],
+                "ci_95_high": ci_95[1],
+                "significant_005": p_value < 0.05,
+                "n_samples": min(len(a), len(b)),
+            }
+
+        stat_results[task] = task_stats
+
+    return stat_results
+
+
+def compute_degradation_stats(results: dict) -> dict:
+    """Compute statistical comparison of degradation between variants."""
+    comparisons = [
+        ("full_pdna", "baseline", "PDNA vs Baseline degradation"),
+        ("pulse", "noise", "Pulse vs Noise degradation"),
+        ("full_idle", "full_pdna", "Idle vs PDNA degradation"),
+    ]
+
+    grouped: dict[tuple[str, str], list[float]] = {}
+    for key, data in results.items():
+        if "error" in data or "degradation" not in data:
+            continue
+        variant, task, seed = _parse_run_key(key)
+        grouped.setdefault((variant, task), []).append(data["degradation"])
+
+    tasks = sorted({t for _, t in grouped.keys()})
+    deg_stats = {}
+
+    for task in tasks:
+        task_stats = {}
+        for v1, v2, label in comparisons:
+            a = np.array(grouped.get((v1, task), []))
+            b = np.array(grouped.get((v2, task), []))
+
+            if len(a) < 2 or len(b) < 2:
+                continue
+
+            if len(a) == len(b):
+                t_stat, p_value = stats.ttest_rel(a, b)
+            else:
+                t_stat, p_value = stats.ttest_ind(a, b)
+
+            task_stats[label] = {
+                "v1_mean_deg": float(np.mean(a)),
+                "v2_mean_deg": float(np.mean(b)),
+                "diff": float(np.mean(a) - np.mean(b)),
+                "p_value": float(p_value),
+                "v1_less_degradation": float(np.mean(a)) < float(np.mean(b)),
+            }
+
+        deg_stats[task] = task_stats
+
+    return deg_stats
+
+
+def compute_overhead_table(results: dict) -> dict:
+    """Compute parameter count and wall time overhead by variant."""
+    overhead: dict[str, dict] = {}
+
+    for key, data in results.items():
+        if "error" in data:
+            continue
+        variant, task, seed = _parse_run_key(key)
+        overhead.setdefault(variant, {"params": [], "wall_times": [], "tasks": set()})
+        if "params" in data:
+            overhead[variant]["params"].append(data["params"])
+        if "wall_time" in data:
+            overhead[variant]["wall_times"].append(data["wall_time"])
+        overhead[variant]["tasks"].add(task)
+
+    table = {}
+    baseline_time = None
+    for v, d in overhead.items():
+        params = d["params"][0] if d["params"] else 0
+        mean_time = float(np.mean(d["wall_times"])) if d["wall_times"] else 0
+        if v == "baseline":
+            baseline_time = mean_time
+        table[v] = {
+            "params": params,
+            "mean_wall_time": mean_time,
+            "std_wall_time": float(np.std(d["wall_times"])) if d["wall_times"] else 0,
+            "n_runs": len(d["wall_times"]),
+        }
+
+    # Add overhead ratio relative to baseline
+    if baseline_time and baseline_time > 0:
+        for v in table:
+            table[v]["overhead_ratio"] = table[v]["mean_wall_time"] / baseline_time
+
+    return table
