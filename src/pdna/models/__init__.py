@@ -1,16 +1,13 @@
 """PDNA model implementations."""
 
-from pdna.models.baseline_ltc import BaselineLTC
-from pdna.models.noise_ltc import NoiseLTC, NoiseLTCCell
-from pdna.models.pulse_ltc import PulseLTC, PulseLTCCell
+from pdna.models.pulse_cfc import NoiseCfC, PulseCfC, PulseModule, SelfAttendModule
 from pdna.models.variants import Variant, VariantModel, build_variant
 
 __all__ = [
-    "BaselineLTC",
-    "NoiseLTC",
-    "NoiseLTCCell",
-    "PulseLTC",
-    "PulseLTCCell",
+    "NoiseCfC",
+    "PulseCfC",
+    "PulseModule",
+    "SelfAttendModule",
     "Variant",
     "VariantModel",
     "build_variant",

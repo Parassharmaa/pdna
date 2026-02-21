@@ -1,33 +1,32 @@
-"""Factory for all 6 ablation variants with unified interface."""
+"""Factory for all 6 ablation variants with unified interface.
+
+Uses CfC (Closed-form Continuous-time) as the backbone instead of LTC
+for ~20x faster training while preserving continuous-time dynamics.
+"""
 
 from __future__ import annotations
 
 from enum import Enum
 
 import torch.nn as nn
+from ncps.torch import CfC
 
-from pdna.models.baseline_ltc import BaselineLTC
-from pdna.models.noise_ltc import NoiseLTC
-from pdna.models.pulse_ltc import PulseLTC
+from pdna.models.pulse_cfc import NoiseCfC, PulseCfC
 
 
 class Variant(str, Enum):
     """The 6 ablation variants."""
 
-    A = "baseline"           # Baseline LTC
-    B = "noise"              # LTC + Noise
-    C = "pulse"              # LTC + Pulse only
-    D = "self_attend"        # LTC + SelfAttend only
+    A = "baseline"           # Baseline CfC
+    B = "noise"              # CfC + Noise
+    C = "pulse"              # CfC + Pulse only
+    D = "self_attend"        # CfC + SelfAttend only
     E = "full_pdna"          # Full PDNA (pulse + self-attend)
     F = "full_idle"          # Full + Idle ticks
 
 
 class VariantModel(nn.Module):
-    """Unified wrapper around any variant's RNN backbone + classification head.
-
-    All variants share the same hidden_size, num_layers, dropout, and output_size.
-    Only the backbone architecture differs.
-    """
+    """Unified wrapper around any variant's backbone + classification head."""
 
     def __init__(
         self,
@@ -40,7 +39,8 @@ class VariantModel(nn.Module):
         alpha_init: float = 0.01,
         beta_init: float = 0.01,
         idle_ticks_per_gap: int = 10,
-        ode_unfolds: int = 6,
+        backbone_units: int = 128,
+        backbone_layers: int = 1,
     ) -> None:
         super().__init__()
         if isinstance(variant, str):
@@ -62,7 +62,8 @@ class VariantModel(nn.Module):
                 alpha_init=alpha_init,
                 beta_init=beta_init,
                 idle_ticks_per_gap=idle_ticks_per_gap,
-                ode_unfolds=ode_unfolds,
+                backbone_units=backbone_units,
+                backbone_layers=backbone_layers,
             )
             self.backbones.append(backbone)
             if i < num_layers - 1:
@@ -75,29 +76,22 @@ class VariantModel(nn.Module):
         )
 
     def forward(self, x, hx=None, gap_mask=None):
-        """Forward pass through stacked backbone layers + classifier.
-
-        Args:
-            x: Input (batch, seq_len, input_size).
-            hx: Optional list of hidden states per layer.
-            gap_mask: Optional boolean mask for gap positions.
-
-        Returns:
-            Tuple of (logits, hidden_states_list).
-        """
+        """Forward pass through stacked backbone layers + classifier."""
         if hx is None:
             hx = [None] * self.num_layers
 
         new_hx = []
         out = x
         for i, backbone in enumerate(self.backbones):
-            if isinstance(backbone, PulseLTC):
-                out, h = backbone(out, hx[i], gap_mask=gap_mask)
-            elif isinstance(backbone, NoiseLTC):
+            if isinstance(backbone, (PulseCfC, NoiseCfC)):
                 out, h = backbone(out, hx[i], gap_mask=gap_mask)
             else:
-                # BaselineLTC-style LTC
-                out, h = backbone(out, hx[i])
+                # Baseline CfC — zero out gaps manually
+                if gap_mask is not None:
+                    out_masked = out * (~gap_mask).unsqueeze(-1).float()
+                else:
+                    out_masked = out
+                out, h = backbone(out_masked, hx[i])
             new_hx.append(h)
             if i < self.num_layers - 1:
                 out = self.dropout_layers[i](out)
@@ -115,36 +109,34 @@ def _build_backbone(
     alpha_init: float,
     beta_init: float,
     idle_ticks_per_gap: int,
-    ode_unfolds: int,
+    backbone_units: int,
+    backbone_layers: int,
 ) -> nn.Module:
     """Build a single backbone layer for a given variant."""
-    from ncps.torch import LTC
-    from ncps.wirings import FullyConnected
 
     if variant == Variant.A:
-        # Baseline: standard LTC, no pulse, no self-attend
-        wiring = FullyConnected(units=hidden_size, output_dim=hidden_size)
-        return LTC(
+        # Baseline CfC — no pulse, no self-attend
+        return CfC(
             input_size=input_size,
-            units=wiring,
+            units=hidden_size,
             return_sequences=True,
             batch_first=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     elif variant == Variant.B:
-        # LTC + Noise
-        return NoiseLTC(
+        return NoiseCfC(
             input_size=input_size,
             hidden_size=hidden_size,
             noise_scale_init=alpha_init,
             return_sequences=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     elif variant == Variant.C:
-        # LTC + Pulse only
-        return PulseLTC(
+        return PulseCfC(
             input_size=input_size,
             hidden_size=hidden_size,
             enable_pulse=True,
@@ -152,12 +144,12 @@ def _build_backbone(
             alpha_init=alpha_init,
             beta_init=beta_init,
             return_sequences=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     elif variant == Variant.D:
-        # LTC + SelfAttend only
-        return PulseLTC(
+        return PulseCfC(
             input_size=input_size,
             hidden_size=hidden_size,
             enable_pulse=False,
@@ -165,12 +157,12 @@ def _build_backbone(
             alpha_init=alpha_init,
             beta_init=beta_init,
             return_sequences=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     elif variant == Variant.E:
-        # Full PDNA (pulse + self-attend)
-        return PulseLTC(
+        return PulseCfC(
             input_size=input_size,
             hidden_size=hidden_size,
             enable_pulse=True,
@@ -179,12 +171,12 @@ def _build_backbone(
             alpha_init=alpha_init,
             beta_init=beta_init,
             return_sequences=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     elif variant == Variant.F:
-        # Full + Idle ticks
-        return PulseLTC(
+        return PulseCfC(
             input_size=input_size,
             hidden_size=hidden_size,
             enable_pulse=True,
@@ -194,7 +186,8 @@ def _build_backbone(
             alpha_init=alpha_init,
             beta_init=beta_init,
             return_sequences=True,
-            ode_unfolds=ode_unfolds,
+            backbone_units=backbone_units,
+            backbone_layers=backbone_layers,
         )
 
     else:

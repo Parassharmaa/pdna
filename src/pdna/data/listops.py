@@ -57,7 +57,7 @@ def _generate_expression(depth: int = 0, max_depth: int = 10, max_args: int = 5)
     return expr, result
 
 
-def generate_listops_dataset(n_samples: int, max_depth: int = 10, max_args: int = 5, seed: int = 42) -> list[tuple[str, int]]:
+def generate_listops_dataset(n_samples: int, max_depth: int = 6, max_args: int = 5, seed: int = 42) -> list[tuple[str, int]]:
     """Generate a ListOps dataset."""
     random.seed(seed)
     data = []
