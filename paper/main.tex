@@ -481,10 +481,22 @@ to similar oscillatory regimes regardless of initialization.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/frequency_spectrum.png}
-\caption{Distribution of learned oscillation frequencies $\omega$ across hidden
-dimensions for Variant C (Pulse) and Variant E (Full \pdna{}).}
+\begin{subfigure}[b]{0.48\textwidth}
+\includegraphics[width=\textwidth]{figures/frequency_spectrum.png}
+\caption{Learned frequency distribution $\omega$.}
 \label{fig:freq_spectrum}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+\includegraphics[width=\textwidth]{figures/alpha_growth.png}
+\caption{Pulse strength $\alpha$: 0.01 $\to$ 0.66.}
+\label{fig:alpha_growth}
+\end{subfigure}
+\caption{Learned pulse parameters. (a) Oscillation frequencies span two orders of
+magnitude, indicating diverse temporal scales. (b) The pulse strength parameter $\alpha$
+grows $\sim$66$\times$ from initialization, confirming the model actively discovers
+utility in the oscillatory signal.}
+\label{fig:pulse_params}
 \end{figure}
 
 \subsection{Compute Overhead}
