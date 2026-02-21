@@ -7,7 +7,7 @@ build/
 *.pt
 *.pth
 *.ckpt
-data/
+/data/
 wandb/
 runs/
 *.log
