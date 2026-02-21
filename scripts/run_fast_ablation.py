@@ -148,14 +148,14 @@ def main():
     print(f"Device: {device}", flush=True)
     if device == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}", flush=True)
-        print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB", flush=True)
+        print(f"VRAM: {torch.cuda.get_device_properties(0).total_mem / 1e9:.1f} GB", flush=True)
 
     cfg = ExperimentConfig()
     cfg.model.hidden_size = 128
-    cfg.training.max_epochs = 40          # Reduced from 80
+    cfg.training.max_epochs = 40
     cfg.training.batch_size = 512
     cfg.training.warmup_epochs = 3
-    cfg.training.early_stopping_patience = 8  # Reduced from 15
+    cfg.training.early_stopping_patience = 8
     cfg.training.lr = 5e-4
     cfg.training.grad_clip_norm = 1.0
     cfg.logging.backend = "none"
