@@ -46,10 +46,11 @@ ablation study on three sequence classification benchmarks (sMNIST, psMNIST, sCI
 with five random seeds, we evaluate gap robustness---the ability to maintain performance
 when portions of the input sequence are removed at test time. Our key finding is that
 structured oscillatory dynamics significantly improve robustness to input interruptions:
-\pdna{} variants achieve up to a 4.62 percentage point advantage over the baseline on
-multi-gap sMNIST ($p < 0.05$ for self-attend vs.\ baseline), while a noise control
-(random perturbation of equal magnitude) provides no benefit, confirming that the
-advantage is structural rather than merely dynamic. These results provide evidence
+the self-attend variant achieves a statistically significant 2.78 percentage point
+multi-gap advantage over baseline ($p = 0.041$), while the pulse variant shows a 4.62 pp
+advantage with large effect size (Cohen's $d = 0.87$). A noise control (random
+perturbation of equal magnitude) provides no benefit, confirming that the advantage is
+structural rather than merely dynamic. These results provide evidence
 that continuous-time models can benefit from biologically-inspired internal oscillatory
 mechanisms for temporal robustness.
 \end{abstract}
@@ -93,7 +94,7 @@ recurrent self-attention. The scalar parameters $\alpha$ and $\beta$ are initial
 small (0.01) and learned during training, allowing the model to discover the optimal
 strength of internal dynamics.
 
-We evaluate \pdna{} through a systematic ablation study using six architectural variants
+We evaluate \pdna{} through a systematic ablation study using five architectural variants
 that isolate each component's contribution, tested on the novel \emph{Gapped} evaluation
 protocol where we zero out increasing fractions (0\%--30\%) of the input sequence at
 test time. Our contributions are:
@@ -230,7 +231,7 @@ backpropagation.
 
 \subsection{Ablation Variants}
 
-To isolate each component's contribution, we evaluate six architectural variants
+To isolate each component's contribution, we evaluate five architectural variants
 (Table~\ref{tab:variants}), all sharing identical hyperparameters except for the
 presence/absence of specific modules:
 
