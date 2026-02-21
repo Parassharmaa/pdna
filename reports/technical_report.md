@@ -154,6 +154,16 @@ baseline models that rely solely on input-driven state evolution.
 
 - **adding**: Baseline accuracy = 0.5125 (chance level, task not learnable with CfC at this scale)
 
+### Architectural Limitation: Idle Ticks
+
+Variant F (Full + Idle) produced identical results to Variant E (Full PDNA).
+This is because CfC processes the full sequence in a single parallel forward pass.
+The idle tick mechanism modifies hidden states at gap positions after CfC has
+already computed the entire sequence, so the modifications do not propagate to
+subsequent timesteps or the final classification output. A sequential processing
+approach would be needed for idle ticks to function as designed, at the cost of
+GPU parallelism.
+
 ## 10. Success Criteria Evaluation
 
 ### Overall Assessment: **Moderate (Promising)**

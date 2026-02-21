@@ -383,6 +383,25 @@ def _build_report(ablation, degradation, stat_tests, deg_stats, overhead,
             lines.append(f"- **{task}**: Baseline accuracy = {baseline_acc:.4f} (chance level, task not learnable with CfC at this scale)")
         lines.append("")
 
+    # Check for idle = pdna equivalence
+    idle_same_as_pdna = all(
+        ablation.get(("full_idle", t), {}).get("mean", -1) == ablation.get(("full_pdna", t), {}).get("mean", -2)
+        for t in tasks if ("full_idle", t) in ablation and ("full_pdna", t) in ablation
+    )
+    if idle_same_as_pdna:
+        lines.extend([
+            "### Architectural Limitation: Idle Ticks",
+            "",
+            "Variant F (Full + Idle) produced identical results to Variant E (Full PDNA).",
+            "This is because CfC processes the full sequence in a single parallel forward pass.",
+            "The idle tick mechanism modifies hidden states at gap positions after CfC has",
+            "already computed the entire sequence, so the modifications do not propagate to",
+            "subsequent timesteps or the final classification output. A sequential processing",
+            "approach would be needed for idle ticks to function as designed, at the cost of",
+            "GPU parallelism.",
+            "",
+        ])
+
     # 10. Success criteria
     lines.extend([
         "## 10. Success Criteria Evaluation",
