@@ -290,14 +290,22 @@ def compute_degradation_stats(results: dict) -> dict:
     return deg_stats
 
 
-def compute_overhead_table(results: dict) -> dict:
-    """Compute parameter count and wall time overhead by variant."""
+def compute_overhead_table(results: dict, task_filter: str | None = None) -> dict:
+    """Compute parameter count and wall time overhead by variant.
+
+    Args:
+        results: Experiment results dict.
+        task_filter: If set, only include runs for this task (avoids mixing
+            tasks with different run times).
+    """
     overhead: dict[str, dict] = {}
 
     for key, data in results.items():
         if "error" in data:
             continue
         variant, task, seed = _parse_run_key(key)
+        if task_filter and task != task_filter:
+            continue
         overhead.setdefault(variant, {"params": [], "wall_times": [], "tasks": set()})
         if "params" in data:
             overhead[variant]["params"].append(data["params"])
