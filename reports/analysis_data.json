@@ -1,0 +1,627 @@
+{
+  "ablation": {
+    "baseline_smnist": {
+      "mean": 0.9774,
+      "std": 0.0005000000000000004,
+      "values": [
+        0.9769,
+        0.9779
+      ]
+    },
+    "noise_smnist": {
+      "mean": 0.9745,
+      "std": 0.0,
+      "values": [
+        0.9745
+      ]
+    },
+    "pulse_smnist": {
+      "mean": 0.9795,
+      "std": 0.0014000000000000123,
+      "values": [
+        0.9809,
+        0.9781
+      ]
+    },
+    "self_attend_smnist": {
+      "mean": 0.98045,
+      "std": 0.0011500000000000399,
+      "values": [
+        0.9793,
+        0.9816
+      ]
+    },
+    "full_pdna_smnist": {
+      "mean": 0.9802500000000001,
+      "std": 0.0011500000000000399,
+      "values": [
+        0.9814,
+        0.9791
+      ]
+    },
+    "full_idle_smnist": {
+      "mean": 0.9802500000000001,
+      "std": 0.0011500000000000399,
+      "values": [
+        0.9814,
+        0.9791
+      ]
+    },
+    "baseline_adding": {
+      "mean": 0.5125,
+      "std": 0.0010000000000000009,
+      "values": [
+        0.5115,
+        0.5135
+      ]
+    },
+    "noise_adding": {
+      "mean": 0.524,
+      "std": 0.004500000000000004,
+      "values": [
+        0.5285,
+        0.5195
+      ]
+    },
+    "pulse_adding": {
+      "mean": 0.512,
+      "std": 0.0010000000000000009,
+      "values": [
+        0.511,
+        0.513
+      ]
+    },
+    "self_attend_adding": {
+      "mean": 0.5265,
+      "std": 0.024500000000000022,
+      "values": [
+        0.502,
+        0.551
+      ]
+    },
+    "full_pdna_adding": {
+      "mean": 0.5137499999999999,
+      "std": 0.0047499999999999765,
+      "values": [
+        0.5185,
+        0.509
+      ]
+    },
+    "full_idle_adding": {
+      "mean": 0.5137499999999999,
+      "std": 0.0047499999999999765,
+      "values": [
+        0.5185,
+        0.509
+      ]
+    }
+  },
+  "degradation": {
+    "baseline_smnist": {
+      "mean_degradation": 0.7291000000000001,
+      "std_degradation": 0.03860000000000002,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.9774,
+          "std": 0.0005000000000000004
+        },
+        "gap_5": {
+          "mean": 0.94505,
+          "std": 0.00764999999999999
+        },
+        "gap_15": {
+          "mean": 0.4454,
+          "std": 0.0587
+        },
+        "gap_30": {
+          "mean": 0.2483,
+          "std": 0.039099999999999996
+        },
+        "multi_gap": {
+          "mean": 0.8506,
+          "std": 0.06209999999999999
+        }
+      }
+    },
+    "noise_smnist": {
+      "mean_degradation": 0.7362,
+      "std_degradation": 0.0,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.9745,
+          "std": 0.0
+        },
+        "gap_5": {
+          "mean": 0.9322,
+          "std": 0.0
+        },
+        "gap_15": {
+          "mean": 0.4724,
+          "std": 0.0
+        },
+        "gap_30": {
+          "mean": 0.2383,
+          "std": 0.0
+        },
+        "multi_gap": {
+          "mean": 0.8006,
+          "std": 0.0
+        }
+      }
+    },
+    "pulse_smnist": {
+      "mean_degradation": 0.70265,
+      "std_degradation": 0.04465000000000002,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.9795,
+          "std": 0.0014000000000000123
+        },
+        "gap_5": {
+          "mean": 0.9586,
+          "std": 0.0031999999999999806
+        },
+        "gap_15": {
+          "mean": 0.43955,
+          "std": 0.06205000000000002
+        },
+        "gap_30": {
+          "mean": 0.27685,
+          "std": 0.04325
+        },
+        "multi_gap": {
+          "mean": 0.9357,
+          "std": 0.006800000000000028
+        }
+      }
+    },
+    "self_attend_smnist": {
+      "mean_degradation": 0.67835,
+      "std_degradation": 0.018850000000000033,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.98045,
+          "std": 0.0011500000000000399
+        },
+        "gap_5": {
+          "mean": 0.9464999999999999,
+          "std": 0.007500000000000007
+        },
+        "gap_15": {
+          "mean": 0.5164,
+          "std": 0.030099999999999988
+        },
+        "gap_30": {
+          "mean": 0.3021,
+          "std": 0.017699999999999994
+        },
+        "multi_gap": {
+          "mean": 0.8708,
+          "std": 0.04749999999999999
+        }
+      }
+    },
+    "full_pdna_smnist": {
+      "mean_degradation": 0.6879,
+      "std_degradation": 0.008299999999999974,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.9802500000000001,
+          "std": 0.0011500000000000399
+        },
+        "gap_5": {
+          "mean": 0.95975,
+          "std": 0.003249999999999975
+        },
+        "gap_15": {
+          "mean": 0.4816,
+          "std": 0.0378
+        },
+        "gap_30": {
+          "mean": 0.29235,
+          "std": 0.009450000000000014
+        },
+        "multi_gap": {
+          "mean": 0.9268000000000001,
+          "std": 0.012500000000000011
+        }
+      }
+    },
+    "full_idle_smnist": {
+      "mean_degradation": 0.6879,
+      "std_degradation": 0.008299999999999974,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.9802500000000001,
+          "std": 0.0011500000000000399
+        },
+        "gap_5": {
+          "mean": 0.95975,
+          "std": 0.003249999999999975
+        },
+        "gap_15": {
+          "mean": 0.4816,
+          "std": 0.0378
+        },
+        "gap_30": {
+          "mean": 0.29235,
+          "std": 0.009450000000000014
+        },
+        "multi_gap": {
+          "mean": 0.9268000000000001,
+          "std": 0.012500000000000011
+        }
+      }
+    },
+    "baseline_adding": {
+      "mean_degradation": 0.0,
+      "std_degradation": 0.006000000000000005,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.5125,
+          "std": 0.0010000000000000009
+        },
+        "gap_5": {
+          "mean": 0.5135,
+          "std": 0.0020000000000000018
+        },
+        "gap_15": {
+          "mean": 0.5149999999999999,
+          "std": 0.003500000000000003
+        },
+        "gap_30": {
+          "mean": 0.5125,
+          "std": 0.0050000000000000044
+        },
+        "multi_gap": {
+          "mean": 0.49974999999999997,
+          "std": 0.005749999999999977
+        }
+      }
+    },
+    "noise_adding": {
+      "mean_degradation": -0.020750000000000046,
+      "std_degradation": 0.02124999999999999,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.524,
+          "std": 0.004500000000000004
+        },
+        "gap_5": {
+          "mean": 0.53,
+          "std": 0.008500000000000008
+        },
+        "gap_15": {
+          "mean": 0.53825,
+          "std": 0.017750000000000044
+        },
+        "gap_30": {
+          "mean": 0.5447500000000001,
+          "std": 0.025749999999999995
+        },
+        "multi_gap": {
+          "mean": 0.53625,
+          "std": 0.017249999999999988
+        }
+      }
+    },
+    "pulse_adding": {
+      "mean_degradation": -0.006749999999999978,
+      "std_degradation": 0.007749999999999979,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.512,
+          "std": 0.0010000000000000009
+        },
+        "gap_5": {
+          "mean": 0.506,
+          "std": 0.007000000000000006
+        },
+        "gap_15": {
+          "mean": 0.5065,
+          "std": 0.006500000000000006
+        },
+        "gap_30": {
+          "mean": 0.51875,
+          "std": 0.006749999999999978
+        },
+        "multi_gap": {
+          "mean": 0.50225,
+          "std": 0.004750000000000004
+        }
+      }
+    },
+    "self_attend_adding": {
+      "mean_degradation": 0.0045000000000000595,
+      "std_degradation": 0.0030000000000000027,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.5265,
+          "std": 0.024500000000000022
+        },
+        "gap_5": {
+          "mean": 0.524,
+          "std": 0.02100000000000002
+        },
+        "gap_15": {
+          "mean": 0.52275,
+          "std": 0.01974999999999999
+        },
+        "gap_30": {
+          "mean": 0.522,
+          "std": 0.02150000000000002
+        },
+        "multi_gap": {
+          "mean": 0.51825,
+          "std": 0.017750000000000044
+        }
+      }
+    },
+    "full_pdna_adding": {
+      "mean_degradation": -0.0007500000000000284,
+      "std_degradation": 0.005750000000000033,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.5137499999999999,
+          "std": 0.0047499999999999765
+        },
+        "gap_5": {
+          "mean": 0.51625,
+          "std": 0.0022499999999999742
+        },
+        "gap_15": {
+          "mean": 0.529,
+          "std": 0.01200000000000001
+        },
+        "gap_30": {
+          "mean": 0.5145,
+          "std": 0.01050000000000001
+        },
+        "multi_gap": {
+          "mean": 0.51475,
+          "std": 0.024749999999999994
+        }
+      }
+    },
+    "full_idle_adding": {
+      "mean_degradation": -0.0007500000000000284,
+      "std_degradation": 0.005750000000000033,
+      "gap_accuracies": {
+        "gap_0": {
+          "mean": 0.5137499999999999,
+          "std": 0.0047499999999999765
+        },
+        "gap_5": {
+          "mean": 0.51625,
+          "std": 0.0022499999999999742
+        },
+        "gap_15": {
+          "mean": 0.529,
+          "std": 0.01200000000000001
+        },
+        "gap_30": {
+          "mean": 0.5145,
+          "std": 0.01050000000000001
+        },
+        "multi_gap": {
+          "mean": 0.51475,
+          "std": 0.024749999999999994
+        }
+      }
+    }
+  },
+  "statistical_tests": {
+    "adding": {
+      "PDNA vs Baseline": {
+        "v1_mean": 0.5137499999999999,
+        "v2_mean": 0.5125,
+        "mean_diff": 0.0012499999999999734,
+        "t_stat": 0.21739130434783197,
+        "p_value": 0.8637247363567474,
+        "cohens_d": 0.21739130434783197,
+        "ci_95_low": -0.01001999999999998,
+        "ci_95_high": 0.012519999999999927,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "Pulse vs Noise": {
+        "v1_mean": 0.512,
+        "v2_mean": 0.524,
+        "mean_diff": -0.01200000000000001,
+        "t_stat": -2.181818181818172,
+        "p_value": 0.2735951642907079,
+        "cohens_d": -2.181818181818172,
+        "ci_95_low": -0.022780000000000022,
+        "ci_95_high": -0.0012200000000000006,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "Full PDNA vs Pulse-only": {
+        "v1_mean": 0.5137499999999999,
+        "v2_mean": 0.512,
+        "mean_diff": 0.0017499999999999183,
+        "t_stat": 0.30434782608695315,
+        "p_value": 0.8119165215094791,
+        "cohens_d": 0.30434782608695315,
+        "ci_95_low": -0.009520000000000035,
+        "ci_95_high": 0.013019999999999872,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "Idle vs PDNA": {
+        "v1_mean": 0.5137499999999999,
+        "v2_mean": 0.5137499999999999,
+        "mean_diff": 0.0,
+        "t_stat": NaN,
+        "p_value": NaN,
+        "cohens_d": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "SelfAttend vs Baseline": {
+        "v1_mean": 0.5265,
+        "v2_mean": 0.5125,
+        "mean_diff": 0.014000000000000012,
+        "t_stat": 0.5957446808510662,
+        "p_value": 0.6579539274852604,
+        "cohens_d": 0.5957446808510662,
+        "ci_95_low": -0.03206000000000002,
+        "ci_95_high": 0.060060000000000044,
+        "significant_005": "False",
+        "n_samples": 2
+      }
+    },
+    "smnist": {
+      "PDNA vs Baseline": {
+        "v1_mean": 0.9802500000000001,
+        "v2_mean": 0.9774,
+        "mean_diff": 0.002850000000000019,
+        "t_stat": 1.7272727272726967,
+        "p_value": 0.33409536468736545,
+        "cohens_d": 1.7272727272726967,
+        "ci_95_low": -0.0003840000000000592,
+        "ci_95_high": 0.006084000000000098,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "Full PDNA vs Pulse-only": {
+        "v1_mean": 0.9802500000000001,
+        "v2_mean": 0.9795,
+        "mean_diff": 0.0007500000000000284,
+        "t_stat": 3.000000000000444,
+        "p_value": 0.2048327646991052,
+        "cohens_d": 3.000000000000444,
+        "ci_95_low": 0.00026000000000008243,
+        "ci_95_high": 0.0012399999999999744,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "Idle vs PDNA": {
+        "v1_mean": 0.9802500000000001,
+        "v2_mean": 0.9802500000000001,
+        "mean_diff": 0.0,
+        "t_stat": NaN,
+        "p_value": NaN,
+        "cohens_d": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "significant_005": "False",
+        "n_samples": 2
+      },
+      "SelfAttend vs Baseline": {
+        "v1_mean": 0.98045,
+        "v2_mean": 0.9774,
+        "mean_diff": 0.003049999999999997,
+        "t_stat": 4.692307692307403,
+        "p_value": 0.1336732899615399,
+        "cohens_d": 4.692307692307403,
+        "ci_95_low": 0.0017759999999999198,
+        "ci_95_high": 0.004324000000000074,
+        "significant_005": "False",
+        "n_samples": 2
+      }
+    }
+  },
+  "degradation_stats": {
+    "adding": {
+      "PDNA vs Baseline degradation": {
+        "v1_mean_deg": -0.0007500000000000284,
+        "v2_mean_deg": 0.0,
+        "diff": -0.0007500000000000284,
+        "p_value": 0.2048327646991052,
+        "v1_less_degradation": true
+      },
+      "Pulse vs Noise degradation": {
+        "v1_mean_deg": -0.006749999999999978,
+        "v2_mean_deg": -0.020750000000000046,
+        "diff": 0.014000000000000068,
+        "p_value": 0.48842637026655455,
+        "v1_less_degradation": false
+      },
+      "Idle vs PDNA degradation": {
+        "v1_mean_deg": -0.0007500000000000284,
+        "v2_mean_deg": -0.0007500000000000284,
+        "diff": 0.0,
+        "p_value": NaN,
+        "v1_less_degradation": false
+      }
+    },
+    "smnist": {
+      "PDNA vs Baseline degradation": {
+        "v1_mean_deg": 0.6879,
+        "v2_mean_deg": 0.7291000000000001,
+        "diff": -0.041200000000000125,
+        "p_value": 0.5411314654402173,
+        "v1_less_degradation": true
+      },
+      "Idle vs PDNA degradation": {
+        "v1_mean_deg": 0.6879,
+        "v2_mean_deg": 0.6879,
+        "diff": 0.0,
+        "p_value": NaN,
+        "v1_less_degradation": false
+      }
+    }
+  },
+  "overhead": {
+    "baseline": {
+      "params": 87434,
+      "mean_wall_time": 351.8485461473465,
+      "std_wall_time": 1.7277311086654663,
+      "n_runs": 2,
+      "overhead_ratio": 1.0
+    },
+    "noise": {
+      "params": 87435,
+      "mean_wall_time": 309.73772716522217,
+      "std_wall_time": 0.0,
+      "n_runs": 1,
+      "overhead_ratio": 0.880315495279923
+    },
+    "pulse": {
+      "params": 104203,
+      "mean_wall_time": 335.6736036539078,
+      "std_wall_time": 2.061017155647278,
+      "n_runs": 2,
+      "overhead_ratio": 0.9540286789001964
+    },
+    "self_attend": {
+      "params": 103819,
+      "mean_wall_time": 334.65137469768524,
+      "std_wall_time": 5.839333415031433,
+      "n_runs": 2,
+      "overhead_ratio": 0.951123369307715
+    },
+    "full_pdna": {
+      "params": 120588,
+      "mean_wall_time": 337.0557881593704,
+      "std_wall_time": 4.7569040060043335,
+      "n_runs": 2,
+      "overhead_ratio": 0.9579570296653117
+    },
+    "full_idle": {
+      "params": 120588,
+      "mean_wall_time": 340.25348818302155,
+      "std_wall_time": 1.0032645463943481,
+      "n_runs": 2,
+      "overhead_ratio": 0.9670453151184283
+    }
+  },
+  "success_criteria": {
+    "improvements": {
+      "adding": 0.0012499999999999734,
+      "smnist": 0.002850000000000019
+    },
+    "tasks_improved": 2,
+    "total_tasks": 2,
+    "all_improved_2pct": false,
+    "degradation_ratios": {
+      "smnist": 0.9434919764092715
+    },
+    "pulse_beats_noise": 1,
+    "pulse_beats_noise_total": 2,
+    "level": "Moderate (Promising)"
+  }
+}
