@@ -24,6 +24,7 @@ from pdna.analysis.results import (
 )
 from pdna.analysis.visualize import (
     plot_degradation_curves,
+    plot_degradation_bars,
     plot_training_curves,
     plot_ablation_heatmap,
 )
@@ -110,6 +111,8 @@ def _generate_figures(degradation, results, ablation, tasks, variants, figures_d
 
     for name, fn, kwargs in [
         ("degradation_curves", plot_degradation_curves,
+         dict(degradation_table=degradation, tasks=tasks)),
+        ("degradation_bars", plot_degradation_bars,
          dict(degradation_table=degradation, tasks=tasks)),
         ("training_curves", plot_training_curves,
          dict(results=results)),
@@ -215,6 +218,8 @@ def _build_report(ablation, degradation, stat_tests, deg_stats, overhead,
         "## 3. Performance Under Increasing Input Gaps",
         "",
         "![Degradation Curves](figures/degradation_curves.png)",
+        "",
+        "![Degradation Bars](figures/degradation_bars.png)",
         "",
         "This is the core visualization of the PDNA hypothesis: models with structured internal",
         "dynamics (pulse) should degrade less gracefully when input is interrupted compared to",

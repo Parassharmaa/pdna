@@ -7,6 +7,24 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
+VARIANT_ORDER = ["baseline", "noise", "pulse", "self_attend", "full_pdna", "full_idle"]
+VARIANT_LABELS = {
+    "baseline": "A. Baseline",
+    "noise": "B. Noise",
+    "pulse": "C. Pulse",
+    "self_attend": "D. SelfAttend",
+    "full_pdna": "E. PDNA",
+    "full_idle": "F. Idle",
+}
+VARIANT_COLORS = {
+    "baseline": "#1f77b4",
+    "noise": "#ff7f0e",
+    "pulse": "#2ca02c",
+    "self_attend": "#d62728",
+    "full_pdna": "#9467bd",
+    "full_idle": "#8c564b",
+}
+
 
 def plot_degradation_curves(
     degradation_table: dict,
@@ -28,9 +46,7 @@ def plot_degradation_curves(
     n_tasks = len(tasks)
     fig, axes = plt.subplots(1, n_tasks, figsize=(6 * n_tasks, 5), squeeze=False)
 
-    variants = sorted({v for v, _ in degradation_table.keys()})
-    colors = plt.cm.tab10(np.linspace(0, 1, len(variants)))
-    variant_colors = dict(zip(variants, colors))
+    variants = [v for v in VARIANT_ORDER if any((v, t) in degradation_table for t in tasks)]
 
     for idx, task in enumerate(tasks):
         ax = axes[0, idx]
@@ -42,12 +58,14 @@ def plot_degradation_curves(
             for gl in gap_levels:
                 ga = entry.get("gap_accuracies", {}).get(gl, {})
                 accs.append(ga.get("mean", 0))
-            ax.plot(gap_labels, accs, "o-", label=variant, color=variant_colors[variant], linewidth=2)
+            label = VARIANT_LABELS.get(variant, variant)
+            color = VARIANT_COLORS.get(variant, "#333333")
+            ax.plot(gap_labels, accs, "o-", label=label, color=color, linewidth=2, markersize=6)
 
         ax.set_title(f"{task}", fontsize=14)
         ax.set_xlabel("Gap Level")
         ax.set_ylabel("Test Accuracy")
-        ax.legend(fontsize=8)
+        ax.legend(fontsize=8, loc="lower left")
         ax.grid(True, alpha=0.3)
 
     fig.suptitle("Performance Degradation Under Increasing Input Gaps", fontsize=16, y=1.02)
@@ -63,35 +81,48 @@ def plot_training_curves(
     metric: str = "val_acc",
     save_path: str | None = None,
 ) -> plt.Figure:
-    """Plot training convergence curves for all runs."""
-    fig, ax = plt.subplots(figsize=(10, 6))
+    """Plot training convergence curves grouped by task."""
+    from pdna.analysis.results import _parse_run_key
 
-    # Group by variant
-    variant_data: dict[str, list] = {}
+    # Group by (variant, task)
+    grouped: dict[tuple[str, str], list] = {}
     for key, data in results.items():
         if "error" in data or "history" not in data:
             continue
-        variant = key.rsplit("_seed", 1)[0].rsplit("_", 1)[0]
+        variant, task, seed = _parse_run_key(key)
         history = data["history"]
         if metric in history:
-            variant_data.setdefault(variant, []).append(history[metric])
+            grouped.setdefault((variant, task), []).append(history[metric])
 
-    colors = plt.cm.tab10(np.linspace(0, 1, len(variant_data)))
-    for (variant, curves), color in zip(sorted(variant_data.items()), colors):
-        # Plot mean with std band
-        min_len = min(len(c) for c in curves)
-        aligned = np.array([c[:min_len] for c in curves])
-        mean = aligned.mean(axis=0)
-        std = aligned.std(axis=0)
-        epochs = np.arange(1, min_len + 1)
-        ax.plot(epochs, mean, label=variant, color=color, linewidth=2)
-        ax.fill_between(epochs, mean - std, mean + std, alpha=0.2, color=color)
+    tasks = sorted({t for _, t in grouped.keys()})
+    n_tasks = max(1, len(tasks))
+    fig, axes = plt.subplots(1, n_tasks, figsize=(6 * n_tasks, 5), squeeze=False)
 
-    ax.set_xlabel("Epoch")
-    ax.set_ylabel(metric.replace("_", " ").title())
-    ax.set_title("Training Convergence")
-    ax.legend()
-    ax.grid(True, alpha=0.3)
+    variants = [v for v in VARIANT_ORDER if any((v, t) in grouped for t in tasks)]
+
+    for idx, task in enumerate(tasks):
+        ax = axes[0, idx]
+        for variant in variants:
+            curves = grouped.get((variant, task), [])
+            if not curves:
+                continue
+            min_len = min(len(c) for c in curves)
+            aligned = np.array([c[:min_len] for c in curves])
+            mean = aligned.mean(axis=0)
+            std = aligned.std(axis=0)
+            epochs = np.arange(1, min_len + 1)
+            label = VARIANT_LABELS.get(variant, variant)
+            color = VARIANT_COLORS.get(variant, "#333333")
+            ax.plot(epochs, mean, label=label, color=color, linewidth=2)
+            ax.fill_between(epochs, mean - std, mean + std, alpha=0.15, color=color)
+
+        ax.set_title(f"{task}", fontsize=14)
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel(metric.replace("_", " ").title())
+        ax.legend(fontsize=8)
+        ax.grid(True, alpha=0.3)
+
+    fig.suptitle("Training Convergence", fontsize=16, y=1.02)
     fig.tight_layout()
 
     if save_path:
@@ -133,6 +164,53 @@ def plot_ablation_heatmap(
 
     plt.colorbar(im, ax=ax, label="Test Accuracy")
     ax.set_title("Ablation Results (Test Accuracy)")
+    fig.tight_layout()
+
+    if save_path:
+        fig.savefig(save_path, dpi=150, bbox_inches="tight")
+    return fig
+
+
+def plot_degradation_bars(
+    degradation_table: dict,
+    tasks: list[str] | None = None,
+    save_path: str | None = None,
+) -> plt.Figure:
+    """Bar chart comparing degradation (gap_0 - gap_30) across variants per task."""
+    if tasks is None:
+        tasks = sorted({t for _, t in degradation_table.keys()})
+
+    variants = [v for v in VARIANT_ORDER if any((v, t) in degradation_table for t in tasks)]
+    n_variants = len(variants)
+    x = np.arange(len(tasks))
+    width = 0.8 / n_variants
+
+    fig, ax = plt.subplots(figsize=(max(8, len(tasks) * 3), 5))
+
+    for i, v in enumerate(variants):
+        degs = []
+        errs = []
+        for t in tasks:
+            entry = degradation_table.get((v, t))
+            if entry:
+                degs.append(entry["mean_degradation"])
+                errs.append(entry.get("std_degradation", 0))
+            else:
+                degs.append(0)
+                errs.append(0)
+
+        label = VARIANT_LABELS.get(v, v)
+        color = VARIANT_COLORS.get(v, "#333333")
+        offset = (i - n_variants / 2 + 0.5) * width
+        ax.bar(x + offset, degs, width, yerr=errs, label=label, color=color, alpha=0.85, capsize=3)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(tasks, fontsize=12)
+    ax.set_ylabel("Degradation (Gap0% - Gap30% accuracy)")
+    ax.set_title("Gap Robustness: Lower = More Robust", fontsize=14)
+    ax.legend(fontsize=8)
+    ax.grid(True, alpha=0.3, axis="y")
+    ax.axhline(y=0, color="black", linewidth=0.5)
     fig.tight_layout()
 
     if save_path:

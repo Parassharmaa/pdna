@@ -10,6 +10,7 @@ from pdna.analysis.results import (
 )
 from pdna.analysis.visualize import (
     plot_degradation_curves,
+    plot_degradation_bars,
     plot_training_curves,
     plot_ablation_heatmap,
     plot_frequency_spectrum,
@@ -23,6 +24,7 @@ __all__ = [
     "compute_degradation_stats",
     "compute_overhead_table",
     "plot_degradation_curves",
+    "plot_degradation_bars",
     "plot_training_curves",
     "plot_ablation_heatmap",
     "plot_frequency_spectrum",
