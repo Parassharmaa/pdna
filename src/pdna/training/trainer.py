@@ -103,11 +103,13 @@ class Trainer:
         tokens = tokens.to(self.device)
         labels = labels.to(self.device)
 
-        # Embed tokens
+        # Embed tokens or pass through as float
         if self.embedding is not None:
             x = self.embedding(tokens)  # (batch, seq_len, embed_dim)
         else:
-            x = tokens.float().unsqueeze(-1)  # (batch, seq_len, 1)
+            x = tokens.float()
+            if x.dim() == 2:
+                x = x.unsqueeze(-1)  # (batch, seq_len, 1) for scalar sequences
 
         return x, labels, gap_mask
 

@@ -1,0 +1,259 @@
+Device: cuda
+GPU: NVIDIA RTX A4000
+
+[1/36] baseline_listops_seed42
+Training baseline_listops_seed42 on cuda
+  Model params: 44,170
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3198 Acc: 0.0967 | Val Loss: 2.3010 Acc: 0.1067 | LR: 5.00e-04 | Time: 8.2s
+  Epoch   2/15 | Train Loss: 2.2911 Acc: 0.1213 | Val Loss: 2.2964 Acc: 0.1300 | LR: 1.00e-03 | Time: 8.1s
+  Epoch   3/15 | Train Loss: 2.2637 Acc: 0.1633 | Val Loss: 2.2968 Acc: 0.1467 | LR: 9.85e-04 | Time: 7.9s
+  Epoch   4/15 | Train Loss: 2.2308 Acc: 0.1780 | Val Loss: 2.3117 Acc: 0.1300 | LR: 9.43e-04 | Time: 7.7s
+  Epoch   5/15 | Train Loss: 2.1995 Acc: 0.2040 | Val Loss: 2.3285 Acc: 0.1300 | LR: 8.74e-04 | Time: 8.0s
+  Epoch   6/15 | Train Loss: 2.1667 Acc: 0.2140 | Val Loss: 2.3324 Acc: 0.1367 | LR: 7.84e-04 | Time: 7.9s
+  Epoch   7/15 | Train Loss: 2.1237 Acc: 0.2527 | Val Loss: 2.3423 Acc: 0.1133 | LR: 6.77e-04 | Time: 7.9s
+  Epoch   8/15 | Train Loss: 2.0838 Acc: 0.2713 | Val Loss: 2.3574 Acc: 0.1233 | LR: 5.60e-04 | Time: 8.0s
+  Epoch   9/15 | Train Loss: 2.0337 Acc: 0.3053 | Val Loss: 2.3800 Acc: 0.1000 | LR: 4.40e-04 | Time: 8.1s
+  Early stopping at epoch 9
+  Test Loss: 2.3299 Acc: 0.1033
+  Test=0.1033 Gap0=0.1033 Gap30=0.1033 Deg=0.0000 73s
+
+[2/36] baseline_listops_seed123
+Training baseline_listops_seed123 on cuda
+  Model params: 44,170
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3135 Acc: 0.1007 | Val Loss: 2.2975 Acc: 0.1067 | LR: 5.00e-04 | Time: 8.4s
+  Epoch   2/15 | Train Loss: 2.2811 Acc: 0.1380 | Val Loss: 2.2895 Acc: 0.1000 | LR: 1.00e-03 | Time: 7.8s
+  Epoch   3/15 | Train Loss: 2.2462 Acc: 0.1727 | Val Loss: 2.3145 Acc: 0.1000 | LR: 9.85e-04 | Time: 8.2s
+  Epoch   4/15 | Train Loss: 2.2096 Acc: 0.1760 | Val Loss: 2.3258 Acc: 0.0933 | LR: 9.43e-04 | Time: 8.3s
+  Epoch   5/15 | Train Loss: 2.1742 Acc: 0.2113 | Val Loss: 2.3376 Acc: 0.1133 | LR: 8.74e-04 | Time: 7.6s
+  Epoch   6/15 | Train Loss: 2.1305 Acc: 0.2367 | Val Loss: 2.3572 Acc: 0.1033 | LR: 7.84e-04 | Time: 8.5s
+  Epoch   7/15 | Train Loss: 2.0777 Acc: 0.2593 | Val Loss: 2.3911 Acc: 0.0867 | LR: 6.77e-04 | Time: 8.0s
+  Epoch   8/15 | Train Loss: 2.0259 Acc: 0.2993 | Val Loss: 2.3992 Acc: 0.0900 | LR: 5.60e-04 | Time: 8.2s
+  Epoch   9/15 | Train Loss: 1.9710 Acc: 0.3273 | Val Loss: 2.4312 Acc: 0.0800 | LR: 4.40e-04 | Time: 8.6s
+  Epoch  10/15 | Train Loss: 1.9144 Acc: 0.3547 | Val Loss: 2.4457 Acc: 0.0800 | LR: 3.23e-04 | Time: 8.5s
+  Epoch  11/15 | Train Loss: 1.8711 Acc: 0.3813 | Val Loss: 2.4595 Acc: 0.0733 | LR: 2.16e-04 | Time: 8.3s
+  Early stopping at epoch 11
+  Test Loss: 2.3390 Acc: 0.1467
+  Test=0.1467 Gap0=0.1467 Gap30=0.1467 Deg=0.0000 91s
+
+[3/36] noise_listops_seed42
+Training noise_listops_seed42 on cuda
+  Model params: 44,171
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3209 Acc: 0.1033 | Val Loss: 2.3015 Acc: 0.1033 | LR: 5.00e-04 | Time: 8.4s
+  Epoch   2/15 | Train Loss: 2.2912 Acc: 0.1280 | Val Loss: 2.2941 Acc: 0.1333 | LR: 1.00e-03 | Time: 8.2s
+  Epoch   3/15 | Train Loss: 2.2595 Acc: 0.1707 | Val Loss: 2.2954 Acc: 0.1333 | LR: 9.85e-04 | Time: 7.8s
+  Epoch   4/15 | Train Loss: 2.2301 Acc: 0.1713 | Val Loss: 2.3080 Acc: 0.1267 | LR: 9.43e-04 | Time: 8.6s
+  Epoch   5/15 | Train Loss: 2.2021 Acc: 0.2007 | Val Loss: 2.3253 Acc: 0.1300 | LR: 8.74e-04 | Time: 8.4s
+  Epoch   6/15 | Train Loss: 2.1680 Acc: 0.2193 | Val Loss: 2.3268 Acc: 0.1333 | LR: 7.84e-04 | Time: 8.4s
+  Epoch   7/15 | Train Loss: 2.1270 Acc: 0.2573 | Val Loss: 2.3351 Acc: 0.1133 | LR: 6.77e-04 | Time: 7.9s
+  Epoch   8/15 | Train Loss: 2.0901 Acc: 0.2673 | Val Loss: 2.3510 Acc: 0.1167 | LR: 5.60e-04 | Time: 8.5s
+  Early stopping at epoch 8
+  Test Loss: 2.3294 Acc: 0.0967
+  Test=0.0967 Gap0=0.0967 Gap30=0.0967 Deg=0.0000 67s
+
+[4/36] noise_listops_seed123
+Training noise_listops_seed123 on cuda
+  Model params: 44,171
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3120 Acc: 0.0973 | Val Loss: 2.2988 Acc: 0.1100 | LR: 5.00e-04 | Time: 8.0s
+  Epoch   2/15 | Train Loss: 2.2787 Acc: 0.1307 | Val Loss: 2.2921 Acc: 0.1067 | LR: 1.00e-03 | Time: 7.6s
+  Epoch   3/15 | Train Loss: 2.2451 Acc: 0.1653 | Val Loss: 2.3145 Acc: 0.1033 | LR: 9.85e-04 | Time: 7.4s
+  Epoch   4/15 | Train Loss: 2.2121 Acc: 0.1907 | Val Loss: 2.3236 Acc: 0.0967 | LR: 9.43e-04 | Time: 7.4s
+  Epoch   5/15 | Train Loss: 2.1691 Acc: 0.2240 | Val Loss: 2.3390 Acc: 0.1067 | LR: 8.74e-04 | Time: 8.5s
+  Epoch   6/15 | Train Loss: 2.1260 Acc: 0.2313 | Val Loss: 2.3555 Acc: 0.0933 | LR: 7.84e-04 | Time: 8.5s
+  Epoch   7/15 | Train Loss: 2.0748 Acc: 0.2680 | Val Loss: 2.3890 Acc: 0.0900 | LR: 6.77e-04 | Time: 8.6s
+  Early stopping at epoch 7
+  Test Loss: 2.3044 Acc: 0.1267
+  Test=0.1267 Gap0=0.1267 Gap30=0.1267 Deg=0.0000 57s
+
+[5/36] pulse_listops_seed42
+Training pulse_listops_seed42 on cuda
+  Model params: 48,459
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3283 Acc: 0.0880 | Val Loss: 2.3174 Acc: 0.1233 | LR: 5.00e-04 | Time: 7.3s
+  Epoch   2/15 | Train Loss: 2.2914 Acc: 0.1327 | Val Loss: 2.3066 Acc: 0.1633 | LR: 1.00e-03 | Time: 8.4s
+  Epoch   3/15 | Train Loss: 2.2544 Acc: 0.1640 | Val Loss: 2.3258 Acc: 0.1367 | LR: 9.85e-04 | Time: 8.2s
+  Epoch   4/15 | Train Loss: 2.2161 Acc: 0.1940 | Val Loss: 2.3398 Acc: 0.1100 | LR: 9.43e-04 | Time: 7.8s
+  Epoch   5/15 | Train Loss: 2.1789 Acc: 0.2140 | Val Loss: 2.3501 Acc: 0.1033 | LR: 8.74e-04 | Time: 7.6s
+  Epoch   6/15 | Train Loss: 2.1307 Acc: 0.2473 | Val Loss: 2.3673 Acc: 0.1133 | LR: 7.84e-04 | Time: 7.4s
+  Epoch   7/15 | Train Loss: 2.0829 Acc: 0.2820 | Val Loss: 2.3944 Acc: 0.1067 | LR: 6.77e-04 | Time: 7.4s
+  Epoch   8/15 | Train Loss: 2.0253 Acc: 0.3133 | Val Loss: 2.4324 Acc: 0.1100 | LR: 5.60e-04 | Time: 7.4s
+  Early stopping at epoch 8
+  Test Loss: 2.3210 Acc: 0.1167
+  Test=0.1167 Gap0=0.1167 Gap30=0.1167 Deg=0.0000 62s
+
+[6/36] pulse_listops_seed123
+Training pulse_listops_seed123 on cuda
+  Model params: 48,459
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3140 Acc: 0.1093 | Val Loss: 2.2995 Acc: 0.1233 | LR: 5.00e-04 | Time: 7.4s
+  Epoch   2/15 | Train Loss: 2.2771 Acc: 0.1420 | Val Loss: 2.2993 Acc: 0.1367 | LR: 1.00e-03 | Time: 7.6s
+  Epoch   3/15 | Train Loss: 2.2421 Acc: 0.1587 | Val Loss: 2.3154 Acc: 0.1100 | LR: 9.85e-04 | Time: 8.1s
+  Epoch   4/15 | Train Loss: 2.2083 Acc: 0.1827 | Val Loss: 2.3231 Acc: 0.1300 | LR: 9.43e-04 | Time: 7.5s
+  Epoch   5/15 | Train Loss: 2.1594 Acc: 0.2147 | Val Loss: 2.3435 Acc: 0.1300 | LR: 8.74e-04 | Time: 7.4s
+  Epoch   6/15 | Train Loss: 2.1100 Acc: 0.2407 | Val Loss: 2.3569 Acc: 0.1433 | LR: 7.84e-04 | Time: 7.5s
+  Epoch   7/15 | Train Loss: 2.0594 Acc: 0.2847 | Val Loss: 2.3740 Acc: 0.1133 | LR: 6.77e-04 | Time: 7.8s
+  Epoch   8/15 | Train Loss: 2.0040 Acc: 0.3193 | Val Loss: 2.3894 Acc: 0.1233 | LR: 5.60e-04 | Time: 7.6s
+  Epoch   9/15 | Train Loss: 1.9450 Acc: 0.3353 | Val Loss: 2.3943 Acc: 0.1267 | LR: 4.40e-04 | Time: 8.4s
+  Epoch  10/15 | Train Loss: 1.8982 Acc: 0.3767 | Val Loss: 2.4089 Acc: 0.1167 | LR: 3.23e-04 | Time: 8.2s
+  Epoch  11/15 | Train Loss: 1.8531 Acc: 0.3947 | Val Loss: 2.4125 Acc: 0.1167 | LR: 2.16e-04 | Time: 8.1s
+  Epoch  12/15 | Train Loss: 1.8218 Acc: 0.4127 | Val Loss: 2.4228 Acc: 0.1133 | LR: 1.26e-04 | Time: 8.6s
+  Early stopping at epoch 12
+  Test Loss: 2.3977 Acc: 0.0900
+  Test=0.0900 Gap0=0.0900 Gap30=0.0900 Deg=0.0000 95s
+
+[7/36] self_attend_listops_seed42
+Training self_attend_listops_seed42 on cuda
+  Model params: 48,267
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3112 Acc: 0.1160 | Val Loss: 2.3191 Acc: 0.1033 | LR: 5.00e-04 | Time: 8.1s
+  Epoch   2/15 | Train Loss: 2.2890 Acc: 0.1353 | Val Loss: 2.3160 Acc: 0.1067 | LR: 1.00e-03 | Time: 8.1s
+  Epoch   3/15 | Train Loss: 2.2525 Acc: 0.1653 | Val Loss: 2.3222 Acc: 0.1267 | LR: 9.85e-04 | Time: 8.0s
+  Epoch   4/15 | Train Loss: 2.2224 Acc: 0.1867 | Val Loss: 2.3458 Acc: 0.1267 | LR: 9.43e-04 | Time: 7.8s
+  Epoch   5/15 | Train Loss: 2.1889 Acc: 0.2027 | Val Loss: 2.3701 Acc: 0.1267 | LR: 8.74e-04 | Time: 8.0s
+  Epoch   6/15 | Train Loss: 2.1415 Acc: 0.2447 | Val Loss: 2.3885 Acc: 0.1233 | LR: 7.84e-04 | Time: 8.7s
+  Epoch   7/15 | Train Loss: 2.1004 Acc: 0.2633 | Val Loss: 2.4017 Acc: 0.1367 | LR: 6.77e-04 | Time: 8.5s
+  Epoch   8/15 | Train Loss: 2.0461 Acc: 0.2933 | Val Loss: 2.4211 Acc: 0.1267 | LR: 5.60e-04 | Time: 9.9s
+  Epoch   9/15 | Train Loss: 1.9866 Acc: 0.3333 | Val Loss: 2.4381 Acc: 0.1367 | LR: 4.40e-04 | Time: 9.2s
+  Epoch  10/15 | Train Loss: 1.9322 Acc: 0.3607 | Val Loss: 2.4568 Acc: 0.1167 | LR: 3.23e-04 | Time: 8.2s
+  Epoch  11/15 | Train Loss: 1.8873 Acc: 0.3727 | Val Loss: 2.4742 Acc: 0.1267 | LR: 2.16e-04 | Time: 8.8s
+  Epoch  12/15 | Train Loss: 1.8508 Acc: 0.3973 | Val Loss: 2.4796 Acc: 0.1067 | LR: 1.26e-04 | Time: 8.7s
+  Epoch  13/15 | Train Loss: 1.8264 Acc: 0.4007 | Val Loss: 2.4842 Acc: 0.1067 | LR: 5.73e-05 | Time: 8.7s
+  Early stopping at epoch 13
+  Test Loss: 2.3977 Acc: 0.1267
+  Test=0.1267 Gap0=0.1267 Gap30=0.1267 Deg=0.0000 111s
+
+[8/36] self_attend_listops_seed123
+Training self_attend_listops_seed123 on cuda
+  Model params: 48,267
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3215 Acc: 0.1067 | Val Loss: 2.2997 Acc: 0.1500 | LR: 5.00e-04 | Time: 8.4s
+  Epoch   2/15 | Train Loss: 2.2891 Acc: 0.1300 | Val Loss: 2.2936 Acc: 0.1800 | LR: 1.00e-03 | Time: 8.2s
+  Epoch   3/15 | Train Loss: 2.2468 Acc: 0.1660 | Val Loss: 2.3161 Acc: 0.1133 | LR: 9.85e-04 | Time: 8.0s
+  Epoch   4/15 | Train Loss: 2.2113 Acc: 0.1860 | Val Loss: 2.3268 Acc: 0.1033 | LR: 9.43e-04 | Time: 8.5s
+  Epoch   5/15 | Train Loss: 2.1757 Acc: 0.2100 | Val Loss: 2.3302 Acc: 0.1133 | LR: 8.74e-04 | Time: 8.3s
+  Epoch   6/15 | Train Loss: 2.1299 Acc: 0.2367 | Val Loss: 2.3469 Acc: 0.0967 | LR: 7.84e-04 | Time: 8.1s
+  Epoch   7/15 | Train Loss: 2.0791 Acc: 0.2580 | Val Loss: 2.3582 Acc: 0.0900 | LR: 6.77e-04 | Time: 8.0s
+  Epoch   8/15 | Train Loss: 2.0222 Acc: 0.3027 | Val Loss: 2.3704 Acc: 0.1033 | LR: 5.60e-04 | Time: 8.3s
+  Early stopping at epoch 8
+  Test Loss: 2.3016 Acc: 0.1333
+  Test=0.1333 Gap0=0.1333 Gap30=0.1333 Deg=0.0000 66s
+
+[9/36] full_pdna_listops_seed42
+Training full_pdna_listops_seed42 on cuda
+  Model params: 52,556
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3375 Acc: 0.0933 | Val Loss: 2.3131 Acc: 0.1167 | LR: 5.00e-04 | Time: 8.2s
+  Epoch   2/15 | Train Loss: 2.2966 Acc: 0.1127 | Val Loss: 2.3007 Acc: 0.1133 | LR: 1.00e-03 | Time: 8.4s
+  Epoch   3/15 | Train Loss: 2.2565 Acc: 0.1640 | Val Loss: 2.2972 Acc: 0.1367 | LR: 9.85e-04 | Time: 8.5s
+  Epoch   4/15 | Train Loss: 2.2180 Acc: 0.1933 | Val Loss: 2.3108 Acc: 0.1367 | LR: 9.43e-04 | Time: 7.9s
+  Epoch   5/15 | Train Loss: 2.1862 Acc: 0.2093 | Val Loss: 2.3230 Acc: 0.1200 | LR: 8.74e-04 | Time: 7.9s
+  Epoch   6/15 | Train Loss: 2.1426 Acc: 0.2360 | Val Loss: 2.3342 Acc: 0.1233 | LR: 7.84e-04 | Time: 8.6s
+  Epoch   7/15 | Train Loss: 2.0916 Acc: 0.2767 | Val Loss: 2.3456 Acc: 0.1433 | LR: 6.77e-04 | Time: 8.1s
+  Epoch   8/15 | Train Loss: 2.0288 Acc: 0.3060 | Val Loss: 2.3571 Acc: 0.1233 | LR: 5.60e-04 | Time: 8.1s
+  Epoch   9/15 | Train Loss: 1.9700 Acc: 0.3407 | Val Loss: 2.3754 Acc: 0.1333 | LR: 4.40e-04 | Time: 7.9s
+  Epoch  10/15 | Train Loss: 1.9126 Acc: 0.3733 | Val Loss: 2.3777 Acc: 0.1500 | LR: 3.23e-04 | Time: 8.5s
+  Epoch  11/15 | Train Loss: 1.8718 Acc: 0.4040 | Val Loss: 2.3956 Acc: 0.1200 | LR: 2.16e-04 | Time: 8.7s
+  Epoch  12/15 | Train Loss: 1.8362 Acc: 0.4140 | Val Loss: 2.3983 Acc: 0.1433 | LR: 1.26e-04 | Time: 9.3s
+  Epoch  13/15 | Train Loss: 1.8122 Acc: 0.4273 | Val Loss: 2.4043 Acc: 0.1400 | LR: 5.73e-05 | Time: 8.6s
+  Epoch  14/15 | Train Loss: 1.7953 Acc: 0.4293 | Val Loss: 2.4068 Acc: 0.1367 | LR: 1.45e-05 | Time: 8.6s
+  Epoch  15/15 | Train Loss: 1.7904 Acc: 0.4213 | Val Loss: 2.4074 Acc: 0.1300 | LR: 0.00e+00 | Time: 8.7s
+  Test Loss: 2.4345 Acc: 0.0967
+  Test=0.0967 Gap0=0.0967 Gap30=0.0967 Deg=0.0000 127s
+
+[10/36] full_pdna_listops_seed123
+Training full_pdna_listops_seed123 on cuda
+  Model params: 52,556
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3256 Acc: 0.1140 | Val Loss: 2.3155 Acc: 0.1167 | LR: 5.00e-04 | Time: 8.9s
+  Epoch   2/15 | Train Loss: 2.2852 Acc: 0.1447 | Val Loss: 2.2866 Acc: 0.1600 | LR: 1.00e-03 | Time: 8.6s
+  Epoch   3/15 | Train Loss: 2.2435 Acc: 0.1740 | Val Loss: 2.3047 Acc: 0.1100 | LR: 9.85e-04 | Time: 9.2s
+  Epoch   4/15 | Train Loss: 2.2066 Acc: 0.1920 | Val Loss: 2.3122 Acc: 0.1067 | LR: 9.43e-04 | Time: 9.4s
+  Epoch   5/15 | Train Loss: 2.1731 Acc: 0.2113 | Val Loss: 2.3256 Acc: 0.0967 | LR: 8.74e-04 | Time: 8.7s
+  Epoch   6/15 | Train Loss: 2.1211 Acc: 0.2493 | Val Loss: 2.3411 Acc: 0.1000 | LR: 7.84e-04 | Time: 8.4s
+  Epoch   7/15 | Train Loss: 2.0702 Acc: 0.2753 | Val Loss: 2.3611 Acc: 0.0967 | LR: 6.77e-04 | Time: 8.5s
+  Epoch   8/15 | Train Loss: 2.0134 Acc: 0.3047 | Val Loss: 2.3801 Acc: 0.0900 | LR: 5.60e-04 | Time: 9.2s
+  Early stopping at epoch 8
+  Test Loss: 2.3179 Acc: 0.1200
+  Test=0.1200 Gap0=0.1200 Gap30=0.1200 Deg=0.0000 72s
+
+[11/36] full_idle_listops_seed42
+Training full_idle_listops_seed42 on cuda
+  Model params: 52,556
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3375 Acc: 0.0933 | Val Loss: 2.3131 Acc: 0.1167 | LR: 5.00e-04 | Time: 8.3s
+  Epoch   2/15 | Train Loss: 2.2966 Acc: 0.1127 | Val Loss: 2.3007 Acc: 0.1133 | LR: 1.00e-03 | Time: 9.0s
+  Epoch   3/15 | Train Loss: 2.2565 Acc: 0.1640 | Val Loss: 2.2972 Acc: 0.1367 | LR: 9.85e-04 | Time: 9.1s
+  Epoch   4/15 | Train Loss: 2.2180 Acc: 0.1933 | Val Loss: 2.3108 Acc: 0.1367 | LR: 9.43e-04 | Time: 8.3s
+  Epoch   5/15 | Train Loss: 2.1862 Acc: 0.2093 | Val Loss: 2.3230 Acc: 0.1200 | LR: 8.74e-04 | Time: 8.5s
+  Epoch   6/15 | Train Loss: 2.1426 Acc: 0.2360 | Val Loss: 2.3342 Acc: 0.1233 | LR: 7.84e-04 | Time: 8.2s
+  Epoch   7/15 | Train Loss: 2.0916 Acc: 0.2767 | Val Loss: 2.3456 Acc: 0.1433 | LR: 6.77e-04 | Time: 9.0s
+  Epoch   8/15 | Train Loss: 2.0288 Acc: 0.3060 | Val Loss: 2.3571 Acc: 0.1233 | LR: 5.60e-04 | Time: 7.2s
+  Epoch   9/15 | Train Loss: 1.9700 Acc: 0.3407 | Val Loss: 2.3754 Acc: 0.1333 | LR: 4.40e-04 | Time: 7.9s
+  Epoch  10/15 | Train Loss: 1.9126 Acc: 0.3733 | Val Loss: 2.3777 Acc: 0.1500 | LR: 3.23e-04 | Time: 7.1s
+  Epoch  11/15 | Train Loss: 1.8718 Acc: 0.4040 | Val Loss: 2.3956 Acc: 0.1200 | LR: 2.16e-04 | Time: 7.3s
+  Epoch  12/15 | Train Loss: 1.8362 Acc: 0.4140 | Val Loss: 2.3983 Acc: 0.1433 | LR: 1.26e-04 | Time: 7.1s
+  Epoch  13/15 | Train Loss: 1.8122 Acc: 0.4273 | Val Loss: 2.4043 Acc: 0.1400 | LR: 5.73e-05 | Time: 8.1s
+  Epoch  14/15 | Train Loss: 1.7953 Acc: 0.4293 | Val Loss: 2.4068 Acc: 0.1367 | LR: 1.45e-05 | Time: 7.9s
+  Epoch  15/15 | Train Loss: 1.7904 Acc: 0.4213 | Val Loss: 2.4074 Acc: 0.1300 | LR: 0.00e+00 | Time: 7.3s
+  Test Loss: 2.4345 Acc: 0.0967
+  Test=0.0967 Gap0=0.0967 Gap30=0.0967 Deg=0.0000 121s
+
+[12/36] full_idle_listops_seed123
+Training full_idle_listops_seed123 on cuda
+  Model params: 52,556
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 2.3256 Acc: 0.1140 | Val Loss: 2.3155 Acc: 0.1167 | LR: 5.00e-04 | Time: 7.4s
+  Epoch   2/15 | Train Loss: 2.2852 Acc: 0.1447 | Val Loss: 2.2866 Acc: 0.1600 | LR: 1.00e-03 | Time: 7.0s
+  Epoch   3/15 | Train Loss: 2.2435 Acc: 0.1740 | Val Loss: 2.3047 Acc: 0.1100 | LR: 9.85e-04 | Time: 7.3s
+  Epoch   4/15 | Train Loss: 2.2066 Acc: 0.1920 | Val Loss: 2.3122 Acc: 0.1067 | LR: 9.43e-04 | Time: 7.0s
+  Epoch   5/15 | Train Loss: 2.1731 Acc: 0.2113 | Val Loss: 2.3256 Acc: 0.0967 | LR: 8.74e-04 | Time: 7.2s
+  Epoch   6/15 | Train Loss: 2.1211 Acc: 0.2493 | Val Loss: 2.3411 Acc: 0.1000 | LR: 7.84e-04 | Time: 7.1s
+  Epoch   7/15 | Train Loss: 2.0702 Acc: 0.2753 | Val Loss: 2.3611 Acc: 0.0967 | LR: 6.77e-04 | Time: 8.1s
+  Epoch   8/15 | Train Loss: 2.0134 Acc: 0.3047 | Val Loss: 2.3801 Acc: 0.0900 | LR: 5.60e-04 | Time: 8.8s
+  Early stopping at epoch 8
+  Test Loss: 2.3179 Acc: 0.1200
+  Test=0.1200 Gap0=0.1200 Gap30=0.1200 Deg=0.0000 61s
+
+[13/36] baseline_pathfinder_seed42
+Training baseline_pathfinder_seed42 on cuda
+  Model params: 74,242
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 0.7324 Acc: 0.4900 | Val Loss: 0.6858 Acc: 0.5667 | LR: 5.00e-04 | Time: 70.7s
+  Epoch   2/15 | Train Loss: 0.6845 Acc: 0.5560 | Val Loss: 0.6988 Acc: 0.5367 | LR: 1.00e-03 | Time: 68.3s
+  Epoch   3/15 | Train Loss: 0.6613 Acc: 0.6007 | Val Loss: 0.7053 Acc: 0.4833 | LR: 9.85e-04 | Time: 69.6s
+  Epoch   4/15 | Train Loss: 0.6426 Acc: 0.6287 | Val Loss: 0.7157 Acc: 0.5033 | LR: 9.43e-04 | Time: 69.7s
+  Epoch   5/15 | Train Loss: 0.6106 Acc: 0.6613 | Val Loss: 0.7167 Acc: 0.5000 | LR: 8.74e-04 | Time: 68.8s
+  Epoch   6/15 | Train Loss: 0.5739 Acc: 0.7100 | Val Loss: 0.7239 Acc: 0.5167 | LR: 7.84e-04 | Time: 69.0s
+  Epoch   7/15 | Train Loss: 0.5307 Acc: 0.7647 | Val Loss: 0.7424 Acc: 0.5100 | LR: 6.77e-04 | Time: 68.0s
+  Early stopping at epoch 7
+  Test Loss: 0.6966 Acc: 0.5267
+  Test=0.5267 Gap0=0.5267 Gap30=0.5267 Deg=0.0000 488s
+
+[14/36] baseline_pathfinder_seed123
+Training baseline_pathfinder_seed123 on cuda
+  Model params: 74,242
+  Epochs: 15
+  Batch size: 64
+  Epoch   1/15 | Train Loss: 0.7146 Acc: 0.4900 | Val Loss: 0.6922 Acc: 0.5300 | LR: 5.00e-04 | Time: 70.3s
+  Epoch   2/15 | Train Loss: 0.6811 Acc: 0.5640 | Val Loss: 0.6927 Acc: 0.5533 | LR: 1.00e-03 | Time: 71.8s
+  Epoch   3/15 | Train Loss: 0.6675 Acc: 0.5827 | Val Loss: 0.6814 Acc: 0.5333 | LR: 9.85e-04 | Time: 71.4s
+  Epoch   4/15 | Train Loss: 0.6411 Acc: 0.6180 | Val Loss: 0.7000 Acc: 0.5333 | LR: 9.43e-04 | Time: 70.8s
+  Epoch   5/15 | Train Loss: 0.6069 Acc: 0.6833 | Val Loss: 0.6892 Acc: 0.5700 | LR: 8.74e-04 | Time: 63.0s
+  Epoch   6/15 | Train Loss: 0.5710 Acc: 0.7173 | Val Loss: 0.7020 Acc: 0.5700 | LR: 7.84e-04 | Time: 64.6s
+  Epoch   7/15 | Train Loss: 0.5364 Acc: 0.7627 | Val Loss: 0.7089 Acc: 0.5733 | LR: 6.77e-04 | Time: 69.9s
