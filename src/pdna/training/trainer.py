@@ -241,6 +241,7 @@ class Trainer:
             "history": self.history,
             **test_results,
         }
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         with open(self.output_dir / "results.json", "w") as f:
             json.dump(results, f, indent=2)
 

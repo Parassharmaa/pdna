@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 """PDNA Final Experiments — tasks designed to reveal pulse mechanism benefits.
 
-Three tasks that test different aspects of temporal processing:
-1. Periodic Signal Classification (seq_periodic): Can the model detect periodic patterns?
-   - Binary classification of oscillating signals with noise
+Three tasks with CLEAR signal for the model to learn:
+1. Frequency Classification (freq_class): Classify multi-cycle oscillations
+   - Low freq (1-3 cycles) vs high freq (8-15 cycles)
    - Pulse mechanism should naturally encode periodic structure
-2. Adding Problem (adding): Classic RNN long-range dependency benchmark
-   - Sum two marked values in a long sequence
-   - Tests ability to maintain information over time
-3. Temporal Order (temporal_order): Remember order of events across gaps
-   - 3-class: which of 3 marker patterns appeared first?
-   - Gaps disrupt temporal context — pulse should help maintain timing
+2. Gap Memory (gap_memory): Remember a pattern shown before a mandatory gap
+   - Pattern → gap → classify based on remembered pattern
+   - Tests state preservation during input interruptions (core PDNA hypothesis)
+3. Temporal Order (temporal_order): Detect which of two events came first
+   - Tests temporal awareness, which pulse timing should support
 
 6 variants × 3 tasks × 3 seeds = 54 runs
 """
@@ -24,7 +23,7 @@ import torch.nn as nn
 from pathlib import Path
 from torch.utils.data import DataLoader, Dataset
 
-from pdna.data.gapped import GapLevel, GappedWrapper
+from pdna.data.gapped import GapLevel, create_gap_mask
 from pdna.models.variants import Variant, build_variant
 from pdna.training.config import ExperimentConfig
 from pdna.training.trainer import Trainer
@@ -33,46 +32,38 @@ VARIANTS = ["baseline", "noise", "pulse", "self_attend", "full_pdna", "full_idle
 SEEDS = [42, 123, 456]
 
 
-# ==================== Task 1: Periodic Signal Classification ====================
+# ==================== Task 1: Frequency Classification ====================
 
-class PeriodicSignalDataset(Dataset):
-    """Classify signals by their dominant frequency band.
+class FreqClassDataset(Dataset):
+    """Classify signals by frequency: low (1-3 cycles) vs high (8-15 cycles).
 
-    Each sample is a multi-channel signal with a primary oscillation.
-    Label = which frequency band the signal belongs to (binary: low vs high freq).
-
-    The pulse mechanism should have a natural advantage here since it
-    generates oscillatory dynamics matching the input structure.
+    The signal clearly oscillates multiple times so the model can detect frequency.
     """
 
-    def __init__(self, n_samples, seq_len=200, n_features=16, seed=42):
+    def __init__(self, n_samples, seq_len=128, n_features=4, seed=42):
         rng = np.random.RandomState(seed)
         self.data = []
         self.labels = []
 
         for _ in range(n_samples):
-            t = np.linspace(0, 8 * np.pi, seq_len)
+            t = np.linspace(0, 1, seq_len)
             label = rng.randint(0, 2)
 
             if label == 0:
-                # Low frequency: 0.3-1.0 Hz
-                freq = rng.uniform(0.3, 1.0)
+                # Low frequency: 1-3 full cycles
+                n_cycles = rng.uniform(1.0, 3.0)
             else:
-                # High frequency: 2.0-5.0 Hz
-                freq = rng.uniform(2.0, 5.0)
+                # High frequency: 8-15 full cycles
+                n_cycles = rng.uniform(8.0, 15.0)
 
             phase = rng.uniform(0, 2 * np.pi)
             amplitude = rng.uniform(0.5, 1.5)
+            signal = amplitude * np.sin(2 * np.pi * n_cycles * t + phase)
 
-            # Base signal
-            signal = amplitude * np.sin(2 * np.pi * freq * t / seq_len + phase)
-
-            # Multi-channel: signal + correlated noise channels
             features = np.zeros((seq_len, n_features), dtype=np.float32)
-            features[:, 0] = signal + rng.randn(seq_len) * 0.3
+            features[:, 0] = signal + rng.randn(seq_len) * 0.2
             for i in range(1, n_features):
-                delay = rng.randint(0, 5)
-                features[:, i] = np.roll(signal, delay) * rng.uniform(0.3, 1.0) + rng.randn(seq_len) * 0.5
+                features[:, i] = signal * rng.uniform(0.3, 1.0) + rng.randn(seq_len) * 0.3
 
             self.data.append(torch.tensor(features))
             self.labels.append(label)
@@ -84,35 +75,46 @@ class PeriodicSignalDataset(Dataset):
         return self.data[idx], self.labels[idx]
 
 
-# ==================== Task 2: Adding Problem ====================
+# ==================== Task 2: Gap Memory ====================
 
-class AddingProblemDataset(Dataset):
-    """Classic adding problem for RNNs.
+class GapMemoryDataset(Dataset):
+    """Remember a pattern shown in the first quarter, classify after a mandatory gap.
 
-    Input: (seq_len, 2) where channel 0 = random values [0,1],
-    channel 1 = binary indicator (1 at exactly two positions).
-    Target: sum of the two indicated values.
-    Converted to binary classification: sum > 1.0 or not.
+    Structure: [pattern region | mandatory gap (zeros) | distractor noise]
+    Pattern types: 'rising' (label=0) or 'falling' (label=1)
+
+    This DIRECTLY tests the PDNA hypothesis: models that can maintain state
+    during the gap should classify better. The pulse provides internal activity
+    during the gap that helps preserve the memory of the pattern.
     """
 
-    def __init__(self, n_samples, seq_len=200, seed=42):
+    def __init__(self, n_samples, seq_len=128, n_features=4, seed=42):
         rng = np.random.RandomState(seed)
         self.data = []
         self.labels = []
 
+        pattern_len = seq_len // 4
+        gap_len = seq_len // 4
+        distractor_len = seq_len - pattern_len - gap_len
+
         for _ in range(n_samples):
-            values = rng.uniform(0, 1, seq_len).astype(np.float32)
-            indicator = np.zeros(seq_len, dtype=np.float32)
+            features = np.zeros((seq_len, n_features), dtype=np.float32)
+            label = rng.randint(0, 2)
 
-            # Place two markers at random positions (not too close)
-            pos1 = rng.randint(0, seq_len // 2)
-            pos2 = rng.randint(seq_len // 2, seq_len)
-            indicator[pos1] = 1.0
-            indicator[pos2] = 1.0
+            # Pattern region: rising or falling ramp with noise
+            if label == 0:
+                pattern = np.linspace(0, 2, pattern_len) + rng.randn(pattern_len) * 0.2
+            else:
+                pattern = np.linspace(2, 0, pattern_len) + rng.randn(pattern_len) * 0.2
 
-            features = np.stack([values, indicator], axis=1)  # (seq_len, 2)
-            target_sum = values[pos1] + values[pos2]
-            label = 1 if target_sum > 1.0 else 0
+            features[:pattern_len, 0] = pattern
+            for i in range(1, n_features):
+                features[:pattern_len, i] = pattern * rng.uniform(0.5, 1.0) + rng.randn(pattern_len) * 0.3
+
+            # Gap region: zeros (already initialized to zeros)
+            # Distractor: random noise
+            start = pattern_len + gap_len
+            features[start:, :] = rng.randn(distractor_len, n_features).astype(np.float32) * 0.5
 
             self.data.append(torch.tensor(features))
             self.labels.append(label)
@@ -127,35 +129,37 @@ class AddingProblemDataset(Dataset):
 # ==================== Task 3: Temporal Order ====================
 
 class TemporalOrderDataset(Dataset):
-    """Remember the order of marker events across a sequence.
+    """Detect which of two marker events came first.
 
-    Two distinct markers (A and B) are embedded in noise.
-    Task: classify which appeared first (A-then-B vs B-then-A vs same-position).
-    This tests temporal memory, which gaps should disrupt.
+    Two distinct markers are embedded in noise at random positions.
+    Task: classify which appeared first (A-then-B = 0, B-then-A = 1).
     """
 
-    def __init__(self, n_samples, seq_len=200, n_features=8, seed=42):
+    def __init__(self, n_samples, seq_len=128, n_features=4, seed=42):
         rng = np.random.RandomState(seed)
         self.data = []
         self.labels = []
 
         for _ in range(n_samples):
-            features = rng.randn(seq_len, n_features).astype(np.float32) * 0.3
+            features = rng.randn(seq_len, n_features).astype(np.float32) * 0.2
 
-            # Place marker A and B at random positions
-            pos1 = rng.randint(seq_len // 4, seq_len // 2)
-            pos2 = rng.randint(seq_len // 2, 3 * seq_len // 4)
+            # Two markers at random non-overlapping positions
+            pos1 = rng.randint(seq_len // 6, seq_len // 3)
+            pos2 = rng.randint(2 * seq_len // 3, 5 * seq_len // 6)
 
-            # Randomly decide order
             label = rng.randint(0, 2)
             if label == 0:
-                # A first, then B
-                features[pos1, :n_features // 2] += 2.0  # Marker A
-                features[pos2, n_features // 2:] += 2.0   # Marker B
+                # A first (positive spike in ch0), then B (positive spike in ch1)
+                features[pos1, 0] = 3.0
+                features[pos1, 1] = -1.0
+                features[pos2, 0] = -1.0
+                features[pos2, 1] = 3.0
             else:
                 # B first, then A
-                features[pos1, n_features // 2:] += 2.0   # Marker B
-                features[pos2, :n_features // 2] += 2.0    # Marker A
+                features[pos1, 0] = -1.0
+                features[pos1, 1] = 3.0
+                features[pos2, 0] = 3.0
+                features[pos2, 1] = -1.0
 
             self.data.append(torch.tensor(features))
             self.labels.append(label)
@@ -167,16 +171,15 @@ class TemporalOrderDataset(Dataset):
         return self.data[idx], self.labels[idx]
 
 
-# ==================== GappedWrapper for float tensors ====================
+# ==================== Gapped Wrapper for float data ====================
 
 class FloatGappedWrapper(Dataset):
-    """Wraps float-tensor datasets with gap masks."""
+    """Wraps float-tensor datasets with gap masks for gapped evaluation."""
 
     def __init__(self, base_dataset, gap_level):
-        from pdna.data.gapped import GapLevel, create_gap_mask
+        from pdna.data.gapped import GapLevel
         self.base = base_dataset
         self.gap_level = GapLevel(gap_level) if isinstance(gap_level, str) else gap_level
-        self.create_gap_mask = create_gap_mask
 
     def __len__(self):
         return len(self.base)
@@ -184,7 +187,7 @@ class FloatGappedWrapper(Dataset):
     def __getitem__(self, idx):
         x, label = self.base[idx]
         seq_len = x.shape[0]
-        gap_mask = self.create_gap_mask(seq_len, self.gap_level, batch_size=1, seed=idx).squeeze(0)
+        gap_mask = create_gap_mask(seq_len, self.gap_level, batch_size=1, seed=idx).squeeze(0)
         x = x.clone()
         x[gap_mask] = 0
         return x, label, gap_mask
@@ -193,26 +196,23 @@ class FloatGappedWrapper(Dataset):
 # ==================== Task config ====================
 
 TASKS = {
-    "seq_periodic": {
-        "dataset_cls": PeriodicSignalDataset,
-        "input_size": 16, "output_size": 2,
-        "seq_len": 200, "n_features": 16,
+    "freq_class": {
+        "dataset_cls": FreqClassDataset,
+        "input_size": 4, "output_size": 2,
+        "seq_len": 128, "n_features": 4,
         "train_size": 8000, "val_size": 1000, "test_size": 1000,
-        "use_embedding": False,
     },
-    "adding": {
-        "dataset_cls": AddingProblemDataset,
-        "input_size": 2, "output_size": 2,
-        "seq_len": 200,
+    "gap_memory": {
+        "dataset_cls": GapMemoryDataset,
+        "input_size": 4, "output_size": 2,
+        "seq_len": 128, "n_features": 4,
         "train_size": 8000, "val_size": 1000, "test_size": 1000,
-        "use_embedding": False,
     },
     "temporal_order": {
         "dataset_cls": TemporalOrderDataset,
-        "input_size": 8, "output_size": 2,
-        "seq_len": 200, "n_features": 8,
+        "input_size": 4, "output_size": 2,
+        "seq_len": 128, "n_features": 4,
         "train_size": 8000, "val_size": 1000, "test_size": 1000,
-        "use_embedding": False,
     },
 }
 
@@ -267,12 +267,13 @@ def main():
         print(f"GPU: {torch.cuda.get_device_name(0)}", flush=True)
 
     cfg = ExperimentConfig()
-    cfg.model.hidden_size = 128
-    cfg.training.max_epochs = 40
+    cfg.model.hidden_size = 64
+    cfg.training.max_epochs = 30
     cfg.training.batch_size = 128
-    cfg.training.warmup_epochs = 3
-    cfg.training.early_stopping_patience = 10
-    cfg.training.lr = 5e-4
+    cfg.training.warmup_epochs = 2
+    cfg.training.early_stopping_patience = 8
+    cfg.training.lr = 1e-3
+    cfg.logging.backend = "none"  # Disable TensorBoard for portability
 
     out_dir = Path("runs")
     out_dir.mkdir(exist_ok=True)
@@ -289,48 +290,52 @@ def main():
                 key = f"{variant_name}_{task_name}_seed{seed}"
                 print(f"\n[{run_num}/{total}] {key}", flush=True)
 
-                torch.manual_seed(seed)
-                np.random.seed(seed)
+                try:
+                    torch.manual_seed(seed)
+                    np.random.seed(seed)
 
-                model = build_variant(
-                    variant_name,
-                    input_size=tc["input_size"],
-                    hidden_size=cfg.model.hidden_size,
-                    output_size=tc["output_size"],
-                    num_layers=cfg.model.num_layers,
-                    dropout=cfg.model.dropout,
-                )
+                    model = build_variant(
+                        variant_name,
+                        input_size=tc["input_size"],
+                        hidden_size=cfg.model.hidden_size,
+                        output_size=tc["output_size"],
+                        num_layers=cfg.model.num_layers,
+                        dropout=cfg.model.dropout,
+                    )
 
-                train_ld, val_ld, test_ld, test_ds = get_data(task_name, cfg, seed)
+                    train_ld, val_ld, test_ld, test_ds = get_data(task_name, cfg, seed)
 
-                trainer = Trainer(
-                    model=model, config=cfg,
-                    train_loader=train_ld, val_loader=val_ld, test_loader=test_ld,
-                    device=device, run_name=key, output_dir=str(out_dir),
-                    vocab_size=256, embed_dim=tc["input_size"],
-                    use_embedding=False,
-                )
+                    trainer = Trainer(
+                        model=model, config=cfg,
+                        train_loader=train_ld, val_loader=val_ld, test_loader=test_ld,
+                        device=device, run_name=key, output_dir=str(out_dir),
+                        vocab_size=256, embed_dim=tc["input_size"],
+                        use_embedding=False,
+                    )
 
-                t0 = time.time()
-                results = trainer.train()
-                elapsed = time.time() - t0
+                    t0 = time.time()
+                    results = trainer.train()
+                    elapsed = time.time() - t0
 
-                # Gapped eval
-                gap_results = gapped_eval(trainer.model, test_ds, device)
-                results["gapped"] = gap_results
-                results["degradation"] = gap_results["gap_0"]["accuracy"] - gap_results["gap_30"]["accuracy"]
-                results["params"] = sum(p.numel() for p in model.parameters())
-                results["wall_time"] = elapsed
+                    # Gapped eval
+                    gap_results = gapped_eval(trainer.model, test_ds, device)
+                    results["gapped"] = gap_results
+                    results["degradation"] = gap_results["gap_0"]["accuracy"] - gap_results["gap_30"]["accuracy"]
+                    results["params"] = sum(p.numel() for p in model.parameters())
+                    results["wall_time"] = elapsed
 
-                all_results[key] = results
-                print(
-                    f"  Test={results['test_acc']:.4f} "
-                    f"Gap0={gap_results['gap_0']['accuracy']:.4f} "
-                    f"Gap30={gap_results['gap_30']['accuracy']:.4f} "
-                    f"Deg={results['degradation']:.4f} "
-                    f"{elapsed:.0f}s",
-                    flush=True,
-                )
+                    all_results[key] = results
+                    print(
+                        f"  Test={results['test_acc']:.4f} "
+                        f"Gap0={gap_results['gap_0']['accuracy']:.4f} "
+                        f"Gap30={gap_results['gap_30']['accuracy']:.4f} "
+                        f"Deg={results['degradation']:.4f} "
+                        f"{elapsed:.0f}s",
+                        flush=True,
+                    )
+                except Exception as e:
+                    print(f"  ERROR: {e}", flush=True)
+                    all_results[key] = {"error": str(e)}
 
                 # Save incrementally
                 with open(out_dir / "all_results.json", "w") as f:
