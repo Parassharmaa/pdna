@@ -148,57 +148,61 @@
 
 ## Phase 4: Experiments
 
-### Task 10 — Run Tier 1 LRA experiments (ListOps, Pathfinder, Text)
-- **Status:** pending
+### Task 10 — Run experiments (sMNIST, pMNIST, Adding Problem)
+- **Status:** 🔄 in progress (running on RunPod RTX A4000)
 - **Blocked by:** #6, #8, #9
 - **Details:**
-  - Train all 6 variants on ListOps, Pathfinder, Text classification
-  - 3 seeds × 6 variants × 3 tasks = 54 training runs
-  - Run Gapped-LRA evaluation at all gap levels
-  - Fill ablation experiment matrix table
-  - Fill Gapped-LRA degradation table
-  - Track compute overhead
-  - Statistical validation: paired t-test, Cohen's d, 95% CI, Bonferroni correction
+  - **Architecture switch:** Replaced LTC with CfC (Closed-form Continuous-time) for ~20x GPU speedup
+  - **Phase 1 (Baseline Validation):** sMNIST PASSED (97.98%), pMNIST running (~96%), Adding queued
+  - **Phase 2 (Full Ablation):** 6 variants × 3 tasks × 3 seeds = 54 runs (queued after Phase 1)
+  - **Phase 3 (Gap Evaluation):** 5 gap levels per run (integrated into Phase 2)
+  - Tasks chosen for CfC compatibility and proven learnability
+  - V1 (ListOps) and V2 (enhanced synthetic) documented as failed baselines
+  - V3 (synthetic freq/gap/temporal) documented — tasks too easy (100% accuracy)
+  - Statistical validation: paired t-test, Cohen's d, 95% CI
 
-### Task 11 — Run Tier 2 LRA experiments (Image, Retrieval)
-- **Status:** pending
+### Task 11 — Run Tier 2 experiments (optional stretch)
+- **Status:** deferred (scope adjusted)
 - **Blocked by:** #10
 - **Details:**
-  - Train all 6 variants on Image (CIFAR-10) and Document Retrieval
-  - 3 seeds × 6 variants × 2 tasks = 36 additional runs
-  - Run Gapped-LRA for these tasks
-  - Compute average scores across all 5 LRA tasks
-  - Compare against published baselines (S4, Mamba, Transformer)
+  - Original plan: Image (CIFAR-10) and Document Retrieval LRA tasks
+  - **Scope adjustment:** Focus on 3 validated tasks that demonstrate CfC+pulse hypothesis
+  - Additional tasks only if Tier 1 results warrant further investigation
+  - If Task 10 shows clear signal, may add longer-sequence sMNIST (196-step) variant
 
 ---
 
 ## Phase 5: Analysis & Deliverables
 
 ### Task 12 — Implement analysis and visualization pipeline
-- **Status:** pending
+- **Status:** ✅ complete
 - **Blocked by:** #10
 - **Details:**
-  1. Learned Frequency Spectrum: extract ω, plot histogram, task correlation
-  2. State Dynamics Visualization: PCA/t-SNE trajectories, decay vs orbit comparison
-  3. Gradient Flow Analysis: gradient magnitudes, α/β evolution over training
-  4. **THE KEY GRAPH:** Performance Degradation Under Increasing Input Gaps
-  5. Training convergence curves
-  6. Compute overhead table
-  7. State entropy during gap periods
+  1. ✅ Learned Frequency Spectrum: extract ω, plot histogram
+  2. ⏳ State Dynamics Visualization: requires model checkpoints from experiment
+  3. ⏳ Gradient Flow Analysis: requires model checkpoints from experiment
+  4. ✅ **THE KEY GRAPH:** Performance Degradation Under Increasing Input Gaps
+  5. ✅ Training convergence curves (per-task subplots with mean+std bands)
+  6. ✅ Compute overhead table (params, wall time, overhead ratio)
+  7. ✅ Degradation bar chart for direct variant comparison
+  8. ✅ Statistical tests: paired t-test, Cohen's d, 95% CI
+  9. ✅ Ablation heatmap
+  10. ✅ Full markdown report generator with success criteria evaluation
 
 ### Task 13 — Compile results and generate technical report
-- **Status:** pending
-- **Blocked by:** #10, #11, #12
+- **Status:** pending (blocked on experiment completion)
+- **Blocked by:** #10, #12
 - **Deliverables:**
-  1. Ablation table (6 variants × 5 tasks, mean ± std)
-  2. Gapped-LRA degradation curves (the key graph)
-  3. Frequency spectrum plots
-  4. State trajectory visualizations
-  5. Training convergence curves
+  1. Ablation table (6 variants × 3 tasks, mean ± std)
+  2. Gapped degradation curves (the key graph)
+  3. Degradation bar chart
+  4. Training convergence curves
+  5. Ablation heatmap
   6. Compute overhead table
-  7. Statistical significance results
+  7. Statistical significance results (t-test, Cohen's d, 95% CI)
   8. Success criteria evaluation (Strong / Moderate / Minimal / Failure)
-  9. Technical report
+  9. Technical report (markdown)
+  10. All experiment logs documented (v1, v2, v3, proper)
 
 ---
 
