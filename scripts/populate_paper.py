@@ -23,8 +23,8 @@ VARIANT_LABELS = {
     "self_attend": "D. \\cfc{} + SelfAttend",
     "full_pdna": "E. Full \\pdna{}",
 }
-TASKS = ["smnist", "psmnist", "scifar10"]
-TASK_LABELS = {"smnist": "sMNIST", "psmnist": "psMNIST", "scifar10": "sCIFAR-10"}
+TASKS = ["smnist"]
+TASK_LABELS = {"smnist": "sMNIST"}
 SEEDS = [42, 123, 456, 789, 1337]
 
 GAP_LEVELS = ["gap_0", "gap_5", "gap_15", "gap_30", "multi_gap"]

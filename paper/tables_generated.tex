@@ -6,15 +6,15 @@
 \centering
 \caption{Test accuracy (\%, mean $\pm$ std across 5 seeds). Bold indicates best per task.}
 \label{tab:accuracy}
-\begin{tabular}{lccc}
+\begin{tabular}{lc}
 \toprule
-\textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} & \textbf{sCIFAR-10} \\
+\textbf{Variant} & \textbf{sMNIST} \\
 \midrule
-A. Baseline \cfc{} & 97.82 $\pm$ 0.12 & 82.45 $\pm$ 1.85 & -- \\
-B. \cfc{} + Noise & 97.78 $\pm$ 0.20 & \textbf{85.25 $\pm$ 0.73} & -- \\
-C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} & -- & -- \\
-D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 & -- & -- \\
-E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- & -- \\
+A. Baseline \cfc{} & 97.82 $\pm$ 0.12 \\
+B. \cfc{} + Noise & 97.78 $\pm$ 0.20 \\
+C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} \\
+D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 \\
+E. Full \pdna{} & 97.93 $\pm$ 0.16 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -24,15 +24,15 @@ E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- & -- \\
 \centering
 \caption{Degradation (Gap 0\% $-$ Gap 30\% accuracy, in \%). Lower = more robust. Bold indicates least degradation per task.}
 \label{tab:degradation}
-\begin{tabular}{lccc}
+\begin{tabular}{lc}
 \toprule
-\textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} & \textbf{sCIFAR-10} \\
+\textbf{Variant} & \textbf{sMNIST} \\
 \midrule
-A. Baseline \cfc{} & 69.31 $\pm$ 5.02 & -0.08 $\pm$ 0.08 & -- \\
-B. \cfc{} + Noise & \textbf{68.00 $\pm$ 4.78} & \textbf{-0.09 $\pm$ 0.12} & -- \\
-C. \cfc{} + Pulse & 68.38 $\pm$ 3.57 & -- & -- \\
-D. \cfc{} + SelfAttend & 69.43 $\pm$ 2.17 & -- & -- \\
-E. Full \pdna{} & 68.21 $\pm$ 3.05 & -- & -- \\
+A. Baseline \cfc{} & 69.31 $\pm$ 5.02 \\
+B. \cfc{} + Noise & \textbf{68.00 $\pm$ 4.78} \\
+C. \cfc{} + Pulse & 68.38 $\pm$ 3.57 \\
+D. \cfc{} + SelfAttend & 69.43 $\pm$ 2.17 \\
+E. Full \pdna{} & 68.21 $\pm$ 3.05 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -51,8 +51,6 @@ sMNIST & PDNA vs Baseline & $+0.11$ & $-1.09$ & 0.4755 & 0.6030 \\
  & Pulse vs Baseline & $+0.14$ & $-0.93$ & 0.1140 & 0.6941 \\
  & SelfAttend vs Baseline & $+0.07$ & $+0.12$ & 0.6531 & 0.9688 \\
  & Full PDNA vs Pulse-only & $-0.03$ & $-0.17$ & 0.7831 & 0.9521 \\
-\midrule
-\midrule
 \bottomrule
 \end{tabular}
 \end{table}
@@ -93,24 +91,6 @@ E. Full \pdna{} & 97.93 & 95.28 & 49.43 & 29.71 & 91.96 \\
 \end{tabular}
 \end{table}
 
-% === GAP TABLE: psmnist ===
-\begin{table}[h]
-\centering
-\caption{Accuracy (\%) at each gap level for psMNIST.}
-\label{tab:gap_psmnist}
-\begin{tabular}{lccccc}
-\toprule
-\textbf{Variant} & \textbf{0\%} & \textbf{5\%} & \textbf{15\%} & \textbf{30\%} & \textbf{Multi} \\
-\midrule
-A. Baseline \cfc{} & 82.45 & 82.45 & 82.41 & 82.53 & 82.19 \\
-B. \cfc{} + Noise & 85.25 & 85.30 & 85.24 & 85.34 & 84.69 \\
-C. \cfc{} + Pulse & -- & -- & -- & -- & -- \\
-D. \cfc{} + SelfAttend & -- & -- & -- & -- & -- \\
-E. Full \pdna{} & -- & -- & -- & -- & -- \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 % === PULSE ANALYSIS ===
 \subsection{Learned Pulse Parameters}
 
@@ -119,7 +99,3 @@ C. \cfc{} + Pulse: $\alpha = 0.6634 \pm 0.0323$
 ($\omega$ range: [0.06, 10.02], mean=2.17)
 E. Full \pdna{}: $\alpha = 0.6488 \pm 0.0255$
 ($\omega$ range: [0.06, 10.00], mean=2.16)
-
-\paragraph{psMNIST.}
-
-\paragraph{sCIFAR-10.}

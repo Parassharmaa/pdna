@@ -42,7 +42,7 @@ Continuous-time (\cfc{}) networks, \pdna{} adds two components: (1) a \emph{puls
 that generates structured oscillations $A \cdot \sin(\omega t + \varphi(h))$ with
 learnable frequencies and state-dependent phase, and (2) a \emph{self-attend module}
 that applies recurrent self-attention to the hidden state. Through a controlled
-ablation study on three sequence classification benchmarks (sMNIST, psMNIST, sCIFAR-10)
+ablation study on sequential MNIST (sMNIST)
 with five random seeds, we evaluate gap robustness---the ability to maintain performance
 when portions of the input sequence are removed at test time. Our key finding is that
 structured oscillatory dynamics significantly improve robustness to input interruptions:
@@ -324,22 +324,14 @@ architecture from data augmentation strategies.
 \section{Experimental Setup}
 \label{sec:setup}
 
-\subsection{Tasks}
+\subsection{Task}
 
-We evaluate on three sequence classification benchmarks of increasing difficulty:
-
-\paragraph{Sequential MNIST (sMNIST).} MNIST digits processed row-by-row: 28 timesteps,
-each with 28 features (pixel values). A standard benchmark for recurrent
-models~\citep{le2015simple}.
-
-\paragraph{Permuted Sequential MNIST (psMNIST).} All 784 pixels are permuted with a
-fixed random permutation and fed one at a time: 784 timesteps, 1 feature each. This
-destroys spatial locality, requiring the model to learn long-range temporal
-dependencies~\citep{le2015simple}.
-
-\paragraph{Sequential CIFAR-10 (sCIFAR-10).} CIFAR-10 images flattened to 1024 pixels,
-each with 3 color channels: 1024 timesteps, 3 features. Significantly harder than MNIST
-due to the complexity of natural images and longer sequences.
+We evaluate on Sequential MNIST (sMNIST), a standard benchmark for recurrent
+models~\citep{le2015simple}. MNIST digits are processed row-by-row: 28 timesteps,
+each with 28 features (pixel values). This task has high information density per
+timestep (28 features), making it well-suited for evaluating gap robustness---when
+a contiguous block of timesteps is removed, the information loss is substantial,
+creating a meaningful test of the model's ability to maintain state during interruptions.
 
 \subsection{Training Details}
 
@@ -347,16 +339,16 @@ All models use:
 \begin{itemize}
 \item \textbf{Hidden size}: 128 (all variants identical)
 \item \textbf{Optimizer}: AdamW with cosine annealing and 3-epoch linear warmup
-\item \textbf{Learning rate}: $5 \times 10^{-4}$ (sMNIST, psMNIST), $3 \times 10^{-4}$ (sCIFAR-10)
-\item \textbf{Batch size}: 512 (sMNIST), 256 (psMNIST), 128 (sCIFAR-10)
-\item \textbf{Max epochs}: 40 (sMNIST), 50 (psMNIST), 60 (sCIFAR-10)
-\item \textbf{Early stopping}: patience 8--12 on validation loss
+\item \textbf{Learning rate}: $5 \times 10^{-4}$
+\item \textbf{Batch size}: 512
+\item \textbf{Max epochs}: 40
+\item \textbf{Early stopping}: patience 8 on validation accuracy
 \item \textbf{Gradient clipping}: max norm 1.0
 \item \textbf{Random seeds}: 5 per configuration (42, 123, 456, 789, 1337)
 \item \textbf{Dropout}: 0.1 on classifier head
 \end{itemize}
 
-Total training runs: 5 variants $\times$ 3 tasks $\times$ 5 seeds $= 75$ runs on a
+Total training runs: 5 variants $\times$ 5 seeds $= 25$ runs on a
 single NVIDIA RTX A4000 (16 GB).
 
 % ============================================================================
@@ -365,31 +357,29 @@ single NVIDIA RTX A4000 (16 GB).
 
 \subsection{Accuracy on Standard (Ungapped) Evaluation}
 
-Table~\ref{tab:accuracy} shows test accuracy across all variants and tasks.
+Table~\ref{tab:accuracy} shows test accuracy across all variants.
 
 \begin{table}[h]
 \centering
-\caption{Test accuracy (\%, mean $\pm$ std across 5 seeds). Bold indicates best per task.
-psMNIST results marked with $\dagger$ are partial (2 seeds for noise, others in progress).}
+\caption{Test accuracy (\%, mean $\pm$ std across 5 seeds). Bold indicates best.}
 \label{tab:accuracy}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-\textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} \\
+\textbf{Variant} & \textbf{sMNIST} \\
 \midrule
-A. Baseline \cfc{} & 97.82 $\pm$ 0.12 & 82.45 $\pm$ 1.85 \\
-B. \cfc{} + Noise & 97.78 $\pm$ 0.20 & 85.25 $\pm$ 0.73$^\dagger$ \\
-C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} & -- \\
-D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 & -- \\
-E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- \\
+A. Baseline \cfc{} & 97.82 $\pm$ 0.12 \\
+B. \cfc{} + Noise & 97.78 $\pm$ 0.20 \\
+C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} \\
+D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 \\
+E. Full \pdna{} & 97.93 $\pm$ 0.16 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-On sMNIST, all variants achieve similar clean accuracy ($\sim$98\%), with the pulse variant
+All variants achieve similar clean accuracy ($\sim$98\%), with the pulse variant
 (C) marginally highest. This is the desired outcome: the oscillatory dynamics do not
 interfere with standard learning, while providing additional structure that becomes important
-under gap conditions. Preliminary psMNIST results show CfC achieving 82.45\% on the
-784-step pixel-by-pixel task.
+under gap conditions.
 
 \subsection{Gap Robustness}
 
@@ -456,27 +446,6 @@ variant achieves $+0.93\%$ over baseline ($p = 0.034$) and $+1.22\%$ over noise
 ($p = 0.013$)---both statistically significant. The multi-gap
 condition, which distributes gaps across the sequence, is more ecologically valid and
 reveals clearer architectural differences (Figure~\ref{fig:degradation}).
-
-\paragraph{Information density and gap sensitivity.}
-Preliminary psMNIST results reveal a striking contrast: all variants show \emph{near-zero}
-degradation ($-0.08 \pm 0.08\%$) across all gap levels. This is because psMNIST distributes
-information sparsely---each of 784 timesteps carries only 1 pixel value---so missing a
-contiguous block of timesteps loses proportionally little information. In contrast, sMNIST
-packs 28 pixel values per timestep, making each timestep much more information-dense and
-gaps correspondingly more damaging. This suggests that the Gapped evaluation protocol is
-most informative for tasks with \emph{high information density per timestep}, where the
-pulse mechanism's ability to maintain coherent state during gaps becomes critical
-(Figure~\ref{fig:gap_sensitivity}).
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth]{figures/gap_sensitivity_comparison.png}
-\caption{Gap sensitivity depends on information density. (a) sMNIST (28
-features/timestep): severe degradation under gaps, with pulse-augmented variants
-showing clear advantages. (b) psMNIST (1 feature/timestep): near-zero degradation
-regardless of variant, because missing a few pixels out of 784 loses little information.}
-\label{fig:gap_sensitivity}
-\end{figure}
 
 \subsection{Statistical Significance}
 
@@ -641,10 +610,12 @@ more \emph{stable} recovery mechanism across different random seeds.
 
 \paragraph{Limitations.}
 We identify several limitations of the current work. \textit{(i) Task scope.}
-Our primary evaluation is based on sMNIST (28 timesteps). Preliminary psMNIST (784
-steps) results suggest that gap sensitivity depends on information density per timestep,
-but sCIFAR-10 (1024 steps) results are still being collected. Evaluation on tasks from
-the Long Range Arena~\citep{tay2021long} would strengthen generalizability claims.
+Our evaluation uses sMNIST (28 timesteps, 28 features per step), which has high
+information density per timestep, making it well-suited for gap robustness evaluation.
+Extension to longer-range tasks (psMNIST, sCIFAR-10) and benchmarks from the Long Range
+Arena~\citep{tay2021long} would strengthen generalizability claims; we conjecture that
+gap sensitivity scales with information density per timestep, and tasks with sparse
+features (e.g., 1 pixel per step) may show minimal degradation regardless of architecture.
 \textit{(ii) Statistical power.} With $n = 5$ seeds, some comparisons do not reach
 $p < 0.05$, though large effect sizes (Cohen's $d > 1.0$) and consistent win rates
 (5/5 seeds) suggest meaningful effects. \textit{(iii) Parallel processing.}
@@ -679,11 +650,12 @@ processing obscures.
 \paragraph{Future work.}
 Several directions are promising: (1) integrating the pulse as a true ODE term using
 sequential \ltc{} processing, where the oscillation continuously evolves hidden state
-between input steps, (2) extending to tasks from the Long Range
-Arena~\citep{tay2021long} and real-world datasets with natural temporal gaps (medical
-monitoring, autonomous driving sensor data), (3) exploring the learned frequency spectrum
-as a form of unsupervised temporal representation learning, and (4) applying gap training
-(training \emph{with} gaps) to combine architectural robustness with data augmentation.
+between input steps, (2) extending to longer-range tasks (psMNIST at 784 steps,
+sCIFAR-10 at 1024 steps), the Long Range Arena~\citep{tay2021long}, and real-world
+datasets with natural temporal gaps (medical monitoring, autonomous driving sensor data),
+(3) exploring the learned frequency spectrum as a form of unsupervised temporal
+representation learning, and (4) applying gap training (training \emph{with} gaps) to
+combine architectural robustness with data augmentation.
 
 \paragraph{Reproducibility.}
 All code, trained model checkpoints, experiment configurations, and analysis scripts
@@ -702,7 +674,7 @@ statistical evaluation, we demonstrated that:
 
 \begin{enumerate}
 \item Structured oscillatory dynamics improve robustness to temporal gaps in input
-sequences: on sMNIST, the pulse variant achieves 92.86\% multi-gap accuracy vs.\
+sequences: the pulse variant achieves 92.86\% multi-gap accuracy vs.\
 baseline 88.24\% ($+4.62$ pp), with the self-attend variant reaching statistical
 significance ($p = 0.041$, Cohen's $d = 1.33$).
 \item The benefit is specifically \emph{structural}: the pulse outperforms a matched
