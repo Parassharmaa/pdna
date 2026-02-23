@@ -31,6 +31,7 @@ class Trainer:
         vocab_size: int = 256,
         embed_dim: int = 128,
         use_embedding: bool = True,
+        use_amp: bool = False,
     ) -> None:
         self.model = model.to(device)
         self.config = config
@@ -42,6 +43,10 @@ class Trainer:
         self.output_dir = Path(output_dir) / run_name
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.use_embedding = use_embedding
+
+        # AMP (Automatic Mixed Precision)
+        self.use_amp = use_amp and self.device.type == "cuda"
+        self.scaler = torch.amp.GradScaler("cuda", enabled=self.use_amp)
 
         # Embedding layer for token inputs
         if use_embedding:
@@ -127,17 +132,20 @@ class Trainer:
             x, labels, gap_mask = self._prepare_batch(batch)
 
             self.optimizer.zero_grad()
-            logits, _ = self.model(x, gap_mask=gap_mask)
-            loss = self.criterion(logits, labels)
-            loss.backward()
+            with torch.amp.autocast("cuda", enabled=self.use_amp):
+                logits, _ = self.model(x, gap_mask=gap_mask)
+                loss = self.criterion(logits, labels)
+            self.scaler.scale(loss).backward()
 
-            # Gradient clipping
+            # Gradient clipping (unscale first for correct norm)
+            self.scaler.unscale_(self.optimizer)
             params = list(self.model.parameters())
             if self.embedding is not None:
                 params += list(self.embedding.parameters())
             torch.nn.utils.clip_grad_norm_(params, self.config.training.grad_clip_norm)
 
-            self.optimizer.step()
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
             self.scheduler.step()
 
             total_loss += loss.item() * labels.size(0)
@@ -162,8 +170,9 @@ class Trainer:
 
         for batch in loader:
             x, labels, gap_mask = self._prepare_batch(batch)
-            logits, _ = self.model(x, gap_mask=gap_mask)
-            loss = self.criterion(logits, labels)
+            with torch.amp.autocast("cuda", enabled=self.use_amp):
+                logits, _ = self.model(x, gap_mask=gap_mask)
+                loss = self.criterion(logits, labels)
 
             total_loss += loss.item() * labels.size(0)
             preds = logits.argmax(dim=-1)
@@ -184,6 +193,7 @@ class Trainer:
         print(f"  Model params: {sum(p.numel() for p in self.model.parameters()):,}")
         print(f"  Epochs: {self.config.training.max_epochs}")
         print(f"  Batch size: {self.config.training.batch_size}")
+        print(f"  AMP: {self.use_amp}")
 
         for epoch in range(self.config.training.max_epochs):
             start_time = time.time()
@@ -254,6 +264,7 @@ class Trainer:
         state = {
             "model": self.model.state_dict(),
             "optimizer": self.optimizer.state_dict(),
+            "scaler": self.scaler.state_dict(),
         }
         if self.embedding is not None:
             state["embedding"] = self.embedding.state_dict()
@@ -266,6 +277,8 @@ class Trainer:
             self.model.load_state_dict(state["model"])
             if self.embedding is not None and "embedding" in state:
                 self.embedding.load_state_dict(state["embedding"])
+            if "scaler" in state:
+                self.scaler.load_state_dict(state["scaler"])
 
 
 def _warmup_cosine_schedule(step: int, warmup_steps: int, total_steps: int) -> float:

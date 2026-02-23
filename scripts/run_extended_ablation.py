@@ -26,6 +26,9 @@ from pdna.models.variants import build_variant
 from pdna.training.config import ExperimentConfig
 from pdna.training.trainer import Trainer
 
+# Performance optimizations
+torch.backends.cudnn.benchmark = True
+
 # Drop full_idle (same as full_pdna due to CfC parallel processing)
 VARIANTS = ["baseline", "noise", "pulse", "self_attend", "full_pdna"]
 SEEDS = [42, 123, 456, 789, 1337]
@@ -156,8 +159,8 @@ def get_data(task_name, batch_size, seed):
     else:
         raise ValueError(task_name)
 
-    num_workers = 4
-    kw = dict(batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    num_workers = 8
+    kw = dict(batch_size=batch_size, num_workers=num_workers, pin_memory=True, persistent_workers=True)
     return (
         DataLoader(train_ds, shuffle=True, **kw),
         DataLoader(val_ds, shuffle=False, **kw),
@@ -266,6 +269,7 @@ def main():
     if device == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}", flush=True)
         print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB", flush=True)
+        print(f"Optimizations: AMP=True, cudnn.benchmark=True, torch.compile=True", flush=True)
 
     out_dir = Path("runs_v5")
     out_dir.mkdir(exist_ok=True)
@@ -289,14 +293,14 @@ def main():
         if task_name == "scifar10":
             # sCIFAR needs more capacity and longer training for 1024-step sequences
             hidden_size = 128
-            batch_size = 128   # smaller batch for longer sequences
+            batch_size = 256   # doubled (AMP halves VRAM per batch)
             max_epochs = 60
             lr = 3e-4
             patience = 12
         elif task_name == "psmnist":
             # psMNIST: 784-step sequences
             hidden_size = 128
-            batch_size = 256
+            batch_size = 512   # doubled (AMP halves VRAM per batch)
             max_epochs = 50
             lr = 5e-4
             patience = 10
@@ -318,7 +322,7 @@ def main():
                     print(f"\n[{run_num}/{total}] {key} — SKIPPED (already done)", flush=True)
                     continue
 
-                print(f"\n[{run_num}/{total}] {key}", flush=True)
+                print(f"\n[{run_num}/{total}] {key} (AMP=True, batch={batch_size})", flush=True)
 
                 torch.manual_seed(seed)
                 np.random.seed(seed)
@@ -343,6 +347,13 @@ def main():
                         dropout=cfg.model.dropout,
                     )
 
+                    # torch.compile for kernel fusion (Ampere+ GPUs)
+                    try:
+                        model = torch.compile(model)
+                        compiled = True
+                    except Exception:
+                        compiled = False
+
                     train_ld, val_ld, test_ld, test_ds = get_data(task_name, batch_size, seed)
 
                     trainer = Trainer(
@@ -350,6 +361,7 @@ def main():
                         train_loader=train_ld, val_loader=val_ld, test_loader=test_ld,
                         device=device, run_name=key, output_dir=str(out_dir),
                         use_embedding=False, vocab_size=256, embed_dim=tc["input_size"],
+                        use_amp=True,
                     )
 
                     t0 = time.time()
