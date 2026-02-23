@@ -435,7 +435,18 @@ contiguous block of timesteps loses proportionally little information. In contra
 packs 28 pixel values per timestep, making each timestep much more information-dense and
 gaps correspondingly more damaging. This suggests that the Gapped evaluation protocol is
 most informative for tasks with \emph{high information density per timestep}, where the
-pulse mechanism's ability to maintain coherent state during gaps becomes critical.
+pulse mechanism's ability to maintain coherent state during gaps becomes critical
+(Figure~\ref{fig:gap_sensitivity}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/gap_sensitivity_comparison.png}
+\caption{Gap sensitivity depends on information density. (a) sMNIST (28
+features/timestep): severe degradation under gaps, with pulse-augmented variants
+showing clear advantages. (b) psMNIST (1 feature/timestep): near-zero degradation
+regardless of variant, because missing a few pixels out of 784 loses little information.}
+\label{fig:gap_sensitivity}
+\end{figure}
 
 \subsection{Statistical Significance}
 
