@@ -293,14 +293,14 @@ def main():
         if task_name == "scifar10":
             # sCIFAR needs more capacity and longer training for 1024-step sequences
             hidden_size = 128
-            batch_size = 256   # doubled (AMP halves VRAM per batch)
+            batch_size = 128
             max_epochs = 60
             lr = 3e-4
             patience = 12
         elif task_name == "psmnist":
             # psMNIST: 784-step sequences
             hidden_size = 128
-            batch_size = 512   # doubled (AMP halves VRAM per batch)
+            batch_size = 256
             max_epochs = 50
             lr = 5e-4
             patience = 10
