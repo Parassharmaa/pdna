@@ -232,7 +232,27 @@ pulse-augmented hidden states.
 
 The pulse and self-attend modules operate in parallel across all timesteps, preserving
 the GPU efficiency of the \cfc{} backbone. The model is trained end-to-end with standard
-backpropagation.
+backpropagation. Algorithm~\ref{alg:pdna} summarizes the forward pass.
+
+\begin{algorithm}[h]
+\caption{PDNA Forward Pass}
+\label{alg:pdna}
+\begin{algorithmic}[1]
+\REQUIRE Input sequence $x \in \mathbb{R}^{B \times T \times d_\text{in}}$, timesteps $t \in \mathbb{R}^T$
+\STATE $h \gets \text{CfC}(x)$ \COMMENT{Backbone: $h \in \mathbb{R}^{B \times T \times d}$}
+\IF{pulse enabled}
+  \STATE $\varphi \gets W_\varphi h + b_\varphi$ \COMMENT{State-dependent phase}
+  \STATE $p \gets A \cdot \sin(\omega \cdot t + \varphi)$ \COMMENT{Oscillatory pulse}
+  \STATE $h \gets h + \alpha \cdot p$ \COMMENT{$\alpha$ learned from 0.01}
+\ENDIF
+\IF{self-attend enabled}
+  \STATE $s \gets W_\text{self} \cdot \sigma(h)$ \COMMENT{Recurrent self-attention}
+  \STATE $h \gets h + \beta \cdot s$ \COMMENT{$\beta$ learned from 0.01}
+\ENDIF
+\STATE $\hat{y} \gets \text{Classifier}(h[:, -1, :])$ \COMMENT{Last hidden state}
+\RETURN $\hat{y}$
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Ablation Variants}
 
@@ -428,7 +448,12 @@ E. Full \pdna{} & 68.21 $\pm$ 3.05 \\
 
 The gap-5\% and multi-gap conditions show more differentiation between variants than
 the extreme gap-30\% condition. At 30\% gap, all models approach near-chance performance
-($\sim$28--30\%), suggesting a fundamental information loss threshold. The multi-gap
+($\sim$28--30\%), suggesting a fundamental information loss threshold beyond which no
+post-hoc augmentation can recover. The gap-5\% condition is the most diagnostically
+useful: it represents a mild perturbation that intact architectures \emph{should} handle
+gracefully, making it sensitive to differences in robustness mechanisms. Here, the pulse
+variant achieves $+0.93\%$ over baseline ($p = 0.034$) and $+1.22\%$ over noise
+($p = 0.013$)---both statistically significant. The multi-gap
 condition, which distributes gaps across the sequence, is more ecologically valid and
 reveals clearer architectural differences (Figure~\ref{fig:degradation}).
 
@@ -615,29 +640,50 @@ more \emph{stable} recovery mechanism across different random seeds.
 \label{sec:discussion}
 
 \paragraph{Limitations.}
-Our current evaluation is based on sMNIST, a relatively short-sequence task (28
-timesteps). While we include psMNIST (784 steps) and sCIFAR-10 (1024 steps) in our
-experimental design, these longer-sequence results are still being collected at the time
-of writing. The statistical significance of our results is limited by the small number
-of seeds ($n = 5$), though large effect sizes (Cohen's $d > 1.0$) suggest the effects
-are meaningful. The \cfc{} backbone processes sequences in parallel, which means our
-``pulse'' operates as a post-hoc augmentation rather than a true continuous-time internal
-dynamic. A sequential architecture (e.g., using \texttt{torchdiffeq}) would allow the
-pulse to genuinely evolve state between input steps, potentially yielding stronger
-results at the cost of GPU parallelism.
+We identify several limitations of the current work. \textit{(i) Task scope.}
+Our primary evaluation is based on sMNIST (28 timesteps). Preliminary psMNIST (784
+steps) results suggest that gap sensitivity depends on information density per timestep,
+but sCIFAR-10 (1024 steps) results are still being collected. Evaluation on tasks from
+the Long Range Arena~\citep{tay2021long} would strengthen generalizability claims.
+\textit{(ii) Statistical power.} With $n = 5$ seeds, some comparisons do not reach
+$p < 0.05$, though large effect sizes (Cohen's $d > 1.0$) and consistent win rates
+(5/5 seeds) suggest meaningful effects. \textit{(iii) Parallel processing.}
+The \cfc{} backbone processes all timesteps in parallel, so the pulse operates as a
+post-hoc augmentation to the full hidden-state tensor rather than as a genuine
+continuous-time dynamic evolving between input steps. A sequential ODE-based
+architecture would allow the pulse to genuinely maintain state during gaps at the cost
+of GPU parallelism---we expect this would yield stronger results.
+\textit{(iv) Degradation floor.} At gap-30\%, all variants collapse to $\sim$28--30\%
+accuracy (near chance for 10-class classification), suggesting that 30\% contiguous
+removal exceeds the information recovery capacity of any architecture at this scale.
+The multi-gap condition, which distributes the same total gap across multiple smaller
+windows, is more discriminative and ecologically valid.
 
 \paragraph{Biological plausibility.}
 While our design is \emph{inspired} by neural oscillations, we do not claim biological
 faithfulness. The pulse module is a simplified mathematical analogue that captures the
 key functional property---persistent structured dynamics during input
-absence---without modeling the complexity of actual neural circuits.
+absence---without modeling the complexity of actual neural circuits. Notably, the learned
+frequency range ($\omega \in [0.06, 10.02]$) and the emergence of multi-scale oscillatory
+structure parallel findings in neuroscience, where different frequency bands serve
+complementary computational roles~\citep{buzsaki2006rhythms}.
+
+\paragraph{Non-additive composition.}
+An interesting observation is that the full PDNA (E) does not strictly outperform the
+individual components (C, D). This sub-additive composition may arise because both
+modules compete for influence over the same hidden state dimensions, or because the
+CfC backbone's parallel processing limits the interaction between pulse and self-attend.
+Sequential processing architectures may reveal synergistic effects that parallel
+processing obscures.
 
 \paragraph{Future work.}
 Several directions are promising: (1) integrating the pulse as a true ODE term using
-sequential \ltc{} processing, (2) extending to longer-range tasks from the Long Range
-Arena, (3) applying to real-world temporal datasets with natural gaps (medical time
-series, sensor data), and (4) exploring the learned frequency spectrum as a form of
-temporal representation learning.
+sequential \ltc{} processing, where the oscillation continuously evolves hidden state
+between input steps, (2) extending to tasks from the Long Range
+Arena~\citep{tay2021long} and real-world datasets with natural temporal gaps (medical
+monitoring, autonomous driving sensor data), (3) exploring the learned frequency spectrum
+as a form of unsupervised temporal representation learning, and (4) applying gap training
+(training \emph{with} gaps) to combine architectural robustness with data augmentation.
 
 \paragraph{Reproducibility.}
 All code, trained model checkpoints, experiment configurations, and analysis scripts
