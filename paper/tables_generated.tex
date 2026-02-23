@@ -10,8 +10,8 @@
 \toprule
 \textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} & \textbf{sCIFAR-10} \\
 \midrule
-A. Baseline \cfc{} & 97.82 $\pm$ 0.12 & -- & -- \\
-B. \cfc{} + Noise & 97.78 $\pm$ 0.20 & -- & -- \\
+A. Baseline \cfc{} & 97.82 $\pm$ 0.12 & 82.45 $\pm$ 1.85 & -- \\
+B. \cfc{} + Noise & 97.78 $\pm$ 0.20 & \textbf{85.25 $\pm$ 0.73} & -- \\
 C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} & -- & -- \\
 D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 & -- & -- \\
 E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- & -- \\
@@ -28,8 +28,8 @@ E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- & -- \\
 \toprule
 \textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} & \textbf{sCIFAR-10} \\
 \midrule
-A. Baseline \cfc{} & 69.31 $\pm$ 5.02 & -- & -- \\
-B. \cfc{} + Noise & \textbf{68.00 $\pm$ 4.78} & -- & -- \\
+A. Baseline \cfc{} & 69.31 $\pm$ 5.02 & -0.08 $\pm$ 0.08 & -- \\
+B. \cfc{} + Noise & \textbf{68.00 $\pm$ 4.78} & \textbf{-0.09 $\pm$ 0.12} & -- \\
 C. \cfc{} + Pulse & 68.38 $\pm$ 3.57 & -- & -- \\
 D. \cfc{} + SelfAttend & 69.43 $\pm$ 2.17 & -- & -- \\
 E. Full \pdna{} & 68.21 $\pm$ 3.05 & -- & -- \\
@@ -89,6 +89,24 @@ B. \cfc{} + Noise & 97.78 & 94.60 & 49.56 & 29.78 & 88.01 \\
 C. \cfc{} + Pulse & 97.96 & 95.82 & 48.27 & 29.58 & 92.86 \\
 D. \cfc{} + SelfAttend & 97.89 & 95.49 & 52.24 & 28.46 & 91.02 \\
 E. Full \pdna{} & 97.93 & 95.28 & 49.43 & 29.71 & 91.96 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% === GAP TABLE: psmnist ===
+\begin{table}[h]
+\centering
+\caption{Accuracy (\%) at each gap level for psMNIST.}
+\label{tab:gap_psmnist}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Variant} & \textbf{0\%} & \textbf{5\%} & \textbf{15\%} & \textbf{30\%} & \textbf{Multi} \\
+\midrule
+A. Baseline \cfc{} & 82.45 & 82.45 & 82.41 & 82.53 & 82.19 \\
+B. \cfc{} + Noise & 85.25 & 85.30 & 85.24 & 85.34 & 84.69 \\
+C. \cfc{} + Pulse & -- & -- & -- & -- & -- \\
+D. \cfc{} + SelfAttend & -- & -- & -- & -- & -- \\
+E. Full \pdna{} & -- & -- & -- & -- & -- \\
 \bottomrule
 \end{tabular}
 \end{table}

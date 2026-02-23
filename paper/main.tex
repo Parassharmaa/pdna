@@ -344,24 +344,27 @@ Table~\ref{tab:accuracy} shows test accuracy across all variants and tasks.
 
 \begin{table}[h]
 \centering
-\caption{Test accuracy (\%, mean $\pm$ std across 5 seeds). Bold indicates best per task.}
+\caption{Test accuracy (\%, mean $\pm$ std across 5 seeds). Bold indicates best per task.
+psMNIST results marked with $\dagger$ are partial (2 seeds for noise, others in progress).}
 \label{tab:accuracy}
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \toprule
-\textbf{Variant} & \textbf{sMNIST} \\
+\textbf{Variant} & \textbf{sMNIST} & \textbf{psMNIST} \\
 \midrule
-A. Baseline \cfc{} & 97.82 $\pm$ 0.12 \\
-B. \cfc{} + Noise & 97.78 $\pm$ 0.20 \\
-C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} \\
-D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 \\
-E. Full \pdna{} & 97.93 $\pm$ 0.16 \\
+A. Baseline \cfc{} & 97.82 $\pm$ 0.12 & 82.45 $\pm$ 1.85 \\
+B. \cfc{} + Noise & 97.78 $\pm$ 0.20 & 85.25 $\pm$ 0.73$^\dagger$ \\
+C. \cfc{} + Pulse & \textbf{97.96 $\pm$ 0.14} & -- \\
+D. \cfc{} + SelfAttend & 97.89 $\pm$ 0.21 & -- \\
+E. Full \pdna{} & 97.93 $\pm$ 0.16 & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All variants achieve similar clean accuracy ($\sim$98\%), with the pulse variant (C) marginally
-highest. This is the desired outcome: the oscillatory dynamics do not interfere with standard
-learning, while providing additional structure that becomes important under gap conditions.
+On sMNIST, all variants achieve similar clean accuracy ($\sim$98\%), with the pulse variant
+(C) marginally highest. This is the desired outcome: the oscillatory dynamics do not
+interfere with standard learning, while providing additional structure that becomes important
+under gap conditions. Preliminary psMNIST results show CfC achieving 82.45\% on the
+784-step pixel-by-pixel task.
 
 \subsection{Gap Robustness}
 
@@ -423,6 +426,16 @@ the extreme gap-30\% condition. At 30\% gap, all models approach near-chance per
 ($\sim$28--30\%), suggesting a fundamental information loss threshold. The multi-gap
 condition, which distributes gaps across the sequence, is more ecologically valid and
 reveals clearer architectural differences (Figure~\ref{fig:degradation}).
+
+\paragraph{Information density and gap sensitivity.}
+Preliminary psMNIST results reveal a striking contrast: all variants show \emph{near-zero}
+degradation ($-0.08 \pm 0.08\%$) across all gap levels. This is because psMNIST distributes
+information sparsely---each of 784 timesteps carries only 1 pixel value---so missing a
+contiguous block of timesteps loses proportionally little information. In contrast, sMNIST
+packs 28 pixel values per timestep, making each timestep much more information-dense and
+gaps correspondingly more damaging. This suggests that the Gapped evaluation protocol is
+most informative for tasks with \emph{high information density per timestep}, where the
+pulse mechanism's ability to maintain coherent state during gaps becomes critical.
 
 \subsection{Statistical Significance}
 
