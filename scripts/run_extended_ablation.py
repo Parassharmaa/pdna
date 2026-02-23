@@ -269,7 +269,7 @@ def main():
     if device == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}", flush=True)
         print(f"VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB", flush=True)
-        print(f"Optimizations: AMP=True, cudnn.benchmark=True, torch.compile=True", flush=True)
+        print(f"Optimizations: AMP=True, cudnn.benchmark=True", flush=True)
 
     out_dir = Path("runs_v5")
     out_dir.mkdir(exist_ok=True)
@@ -346,13 +346,6 @@ def main():
                         num_layers=cfg.model.num_layers,
                         dropout=cfg.model.dropout,
                     )
-
-                    # torch.compile for kernel fusion (Ampere+ GPUs)
-                    try:
-                        model = torch.compile(model)
-                        compiled = True
-                    except Exception:
-                        compiled = False
 
                     train_ld, val_ld, test_ld, test_ds = get_data(task_name, batch_size, seed)
 
