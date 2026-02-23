@@ -141,9 +141,14 @@ computation~\citep{buzsaki2006rhythms}. Theta rhythms ($4$--$8$ Hz) support work
 memory maintenance~\citep{lisman2005theta}, gamma oscillations bind features across
 cortical areas~\citep{singer1999neuronal}, and alpha rhythms gate sensory
 processing~\citep{klimesch2012alpha}. In artificial systems, oscillatory components have
-been explored in reservoir computing~\citep{jaeger2004harnessing} and oscillatory
-recurrent units~\citep{rusch2021coupled}, but not as learnable augmentations to
-continuous-time models specifically designed for gap robustness.
+been explored in reservoir computing~\citep{jaeger2004harnessing} and coupled
+oscillatory recurrent neural networks (coRNN)~\citep{rusch2021coupled}. coRNN uses
+second-order ODEs to create oscillatory hidden state dynamics, achieving strong results
+on long-range tasks. Our approach differs in three key ways: (1) we add oscillation as a
+\emph{modular augmentation} to an existing architecture (CfC) rather than redesigning
+the core dynamics, (2) our pulse has state-dependent phase $\varphi(h)$ enabling
+context-sensitive oscillation, and (3) we specifically study \emph{gap robustness}
+rather than standard sequence classification performance.
 
 \paragraph{Robustness in sequence models.}
 Prior work on sequence model robustness has focused on adversarial
@@ -633,6 +638,13 @@ sequential \ltc{} processing, (2) extending to longer-range tasks from the Long 
 Arena, (3) applying to real-world temporal datasets with natural gaps (medical time
 series, sensor data), and (4) exploring the learned frequency spectrum as a form of
 temporal representation learning.
+
+\paragraph{Reproducibility.}
+All code, trained model checkpoints, experiment configurations, and analysis scripts
+are publicly available at
+\url{https://github.com/Parassharmaa/pdna}. The experiment can be reproduced with a
+single command (\texttt{python scripts/run\_extended\_ablation.py}) on any CUDA-capable
+GPU. All random seeds are fixed and reported (42, 123, 456, 789, 1337).
 
 % ============================================================================
 \section{Conclusion}
