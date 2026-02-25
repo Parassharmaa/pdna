@@ -125,8 +125,9 @@ computation and irregular time series processing. Liquid Time-Constant
 constants, yielding compact models with strong temporal reasoning. The Closed-form
 Continuous-time (\cfc{}) model~\citep{hasani2022liquid} provides an analytical solution
 to the \ltc{} dynamics, achieving $\sim$20$\times$ speedup while preserving
-continuous-time properties. We build on \cfc{} as our backbone due to its favorable
-speed--expressiveness tradeoff.
+continuous-time properties. LTC-SE~\citep{bidollahkhani2023ltcse} extends \ltc{} networks with
+squeeze-and-excitation modules for scalable deployment on embedded systems. We build on
+\cfc{} as our backbone due to its favorable speed--expressiveness tradeoff.
 
 \paragraph{Structured state space models.}
 The Structured State Space (S4) family~\citep{gu2022efficiently} approaches long-range
@@ -861,12 +862,20 @@ that maintain useful internal representations even in the absence of external in
 
 % ============================================================================
 % Bibliography inlined for arXiv submission
-\begin{thebibliography}{22}
+\newpage
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bidollahkhani et~al.(2023)Bidollahkhani, Atasoy, and
+  Abdellatef]{bidollahkhani2023ltcse}
+Michael Bidollahkhani, Ferhat Atasoy, and Hamdan Abdellatef.
+\newblock {LTC-SE}: Expanding the potential of liquid time-constant neural
+  networks for scalable {AI} and embedded systems.
+\newblock \emph{arXiv preprint arXiv:2304.08691}, 2023.
 
 \bibitem[Buzs{\'a}ki(2006)]{buzsaki2006rhythms}
 Gy{\"o}rgy Buzs{\'a}ki.
@@ -1005,6 +1014,7 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
 \end{thebibliography}
 
 % ============================================================================
+\newpage
 \appendix
 \section{Per-Seed Results}
 \label{app:per_seed}
@@ -1013,7 +1023,7 @@ For transparency, Table~\ref{tab:per_seed} reports individual multi-gap accuracy
 seed. The pulse variant (C) outperforms the baseline in all 5 seeds, with the largest
 advantage on seed 42 ($+14.1$ pp) where the baseline suffers the most.
 
-\begin{table}[h]
+\begin{table}[h!]
 \centering
 \caption{Per-seed multi-gap accuracy (\%) on sMNIST. Bold indicates best per seed.}
 \label{tab:per_seed}
