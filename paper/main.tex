@@ -12,6 +12,8 @@
 \usepackage{subcaption}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing,fit,backgrounds}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 \graphicspath{{figures/}}
@@ -246,7 +248,80 @@ pulse-augmented hidden states.
 
 The pulse and self-attend modules operate in parallel across all timesteps, preserving
 the GPU efficiency of the \cfc{} backbone. The model is trained end-to-end with standard
-backpropagation. Algorithm~\ref{alg:pdna} summarizes the forward pass.
+backpropagation. Figure~\ref{fig:architecture} illustrates the architecture and
+Algorithm~\ref{alg:pdna} summarizes the forward pass.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+    >=Stealth,
+    block/.style={draw, rounded corners=3pt, minimum height=0.8cm,
+                  minimum width=2.5cm, align=center, font=\small,
+                  fill=#1!10, draw=#1!50, line width=0.7pt},
+    modbox/.style={draw, rounded corners=4pt, minimum height=1.1cm,
+                   minimum width=3.2cm, align=center, font=\footnotesize,
+                   fill=#1!6, draw=#1!45, line width=0.7pt},
+    op/.style={circle, draw, inner sep=0pt, font=\small\bfseries,
+               fill=white, minimum size=0.55cm, line width=0.7pt},
+    arr/.style={->, thick, color=black!70},
+    lab/.style={font=\scriptsize\itshape, text=black!45},
+]
+
+% === Vertical spine (center) ===
+\node[block=black] (input) {Input $x$};
+\node[lab, right=0.15cm of input] {$B {\times} T {\times} d_\text{in}$};
+
+\node[block=blue, below=0.7cm of input] (cfc) {\cfc{} Backbone};
+\node[lab, right=0.15cm of cfc] {$B {\times} T {\times} d$};
+
+\node[op, below=0.7cm of cfc] (add1) {$+$};
+
+\node[op, below=0.7cm of add1] (add2) {$+$};
+
+\node[block=black, below=0.7cm of add2] (cls) {Classifier};
+\node[lab, right=0.15cm of cls] {$h[:, {-}1, :]$};
+
+\node[block=black, below=0.5cm of cls] (out) {$\hat{y}$};
+
+% Spine arrows
+\draw[arr] (input) -- (cfc);
+\draw[arr] (cfc) -- node[left, lab] {$h_\text{cfc}$} (add1);
+\draw[arr] (add1) -- node[left, lab] {$h_\text{pulse}$} (add2);
+\draw[arr] (add2) -- node[left, lab] {$h_\text{out}$} (cls);
+\draw[arr] (cls) -- (out);
+
+% === Pulse Module (left of add1) ===
+\node[modbox=green!70!black, left=1.8cm of add1]
+    (pulse) {\textbf{Pulse Module}\\[2pt]
+    $\alpha \!\cdot\! A \!\cdot\! \sin(\omega t + \varphi(h))$};
+
+\draw[arr, green!50!black] (pulse) -- node[above, lab] {$\alpha \!\cdot\! p$} (add1);
+\draw[arr, green!50!black, densely dashed]
+    ($(cfc.south)!0.5!(add1.north)$) -- ++(-2.7,0) |- (pulse.west);
+\node[lab] at ($(cfc.south)!0.5!(add1.north)+(-1.35,-0.15)$) {$h_\text{cfc},\; t$};
+
+% === Self-Attend Module (right of add2) ===
+\node[modbox=purple, right=1.8cm of add2]
+    (sa) {\textbf{Self-Attend Module}\\[2pt]
+    $\beta \!\cdot\! W_\text{self} \!\cdot\! \sigma(h)$};
+
+\draw[arr, purple!60] (sa) -- node[above, lab] {$\beta \!\cdot\! s$} (add2);
+\draw[arr, purple!60, densely dashed]
+    ($(add1.south)!0.5!(add2.north)$) -- ++(2.7,0) |- (sa.east);
+\node[lab] at ($(add1.south)!0.5!(add2.north)+(1.35,-0.15)$) {$h_\text{pulse}$};
+
+\end{tikzpicture}
+\caption{The \pdna{} architecture. Input sequences are processed by the \cfc{} backbone,
+producing hidden states $h_\text{cfc}$. The \textcolor{green!50!black}{\textbf{pulse module}}
+(left) adds structured oscillations $\alpha \cdot A \cdot \sin(\omega t + \varphi(h))$
+with learnable per-dimension frequency $\omega$, amplitude $A$, state-dependent phase
+$\varphi(h)$, and scalar gate $\alpha$. The
+\textcolor{purple!70!black}{\textbf{self-attend module}} (right) adds a gated
+self-projection $\beta \cdot W_\text{self} \cdot \sigma(h)$. Both are additive
+residuals with learned gates initialized at 0.01. The last timestep's hidden
+state is passed to a linear classifier.}
+\label{fig:architecture}
+\end{figure}
 
 \begin{algorithm}[h]
 \caption{PDNA Forward Pass}
