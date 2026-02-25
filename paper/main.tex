@@ -1,20 +1,20 @@
 \documentclass{article}
 
 % Required packages
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{subcaption}
 \usepackage[margin=1in]{geometry}
 \usepackage{natbib}
-\bibliographystyle{plainnat}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\graphicspath{{figures/}}
 
 % Custom commands
 \newcommand{\pdna}{\textsc{PDNA}}
@@ -405,7 +405,7 @@ under gap conditions.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.85\textwidth]{figures/degradation_curves.png}
+\includegraphics[width=0.85\textwidth]{degradation_curves}
 \caption{Accuracy under increasing gap severity on sMNIST (5 seeds, mean $\pm$ std bands).
 Pulse-augmented variants (C, E) degrade more gracefully than baseline, particularly
 on the multi-gap condition where scattered interruptions test recovery ability.}
@@ -532,13 +532,13 @@ to similar oscillatory regimes regardless of initialization.
 \begin{figure}[h]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-\includegraphics[width=\textwidth]{figures/frequency_spectrum.png}
+\includegraphics[width=\textwidth]{frequency_spectrum}
 \caption{Learned frequency distribution $\omega$.}
 \label{fig:freq_spectrum}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-\includegraphics[width=\textwidth]{figures/alpha_growth.png}
+\includegraphics[width=\textwidth]{alpha_growth}
 \caption{Pulse strength $\alpha$: 0.01 $\to$ 0.66.}
 \label{fig:alpha_growth}
 \end{subfigure}
@@ -551,7 +551,7 @@ grows $\sim$66$\times$ from initialization.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures/alpha_A_product.png}
+\includegraphics[width=\textwidth]{alpha_A_product}
 \caption{Effective pulse magnitude $\alpha \cdot \|A\|_2$ over training epochs
 (mean $\pm$ std, 5 seeds). Left: the product $\alpha \cdot \|A\|_2$ grows monotonically
 from 0.011 to $\sim$4.8 ($\sim$420$\times$). Center: $\alpha$ alone (0.01 $\to$ 0.67).
@@ -582,7 +582,7 @@ E. Full \pdna{} & 120,588 & 1.05$\times$ & 337.4 $\pm$ 6.6 \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures/training_and_multigap.png}
+\includegraphics[width=\textwidth]{training_and_multigap}
 \caption{Left: Training convergence on sMNIST (mean $\pm$ std, 5 seeds). All variants
 converge to similar final accuracy, confirming the pulse does not interfere with
 standard learning. Right: Multi-gap robustness comparison. Pulse-augmented variants
@@ -674,7 +674,7 @@ fall below the Nyquist limit.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures/phase_magnitude.png}
+\includegraphics[width=\textwidth]{phase_magnitude}
 \caption{Phase magnitude analysis: $|\varphi(h)| / |\omega|$ (blue) compared to the
 timestep index $t$ (dashed gray) across the input sequence. The state-dependent phase
 is $\sim$$5\times$ smaller than $t$ at the midpoint, confirming the pulse operates
@@ -685,7 +685,7 @@ degenerate function of $h$.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures/nyquist_analysis.png}
+\includegraphics[width=\textwidth]{nyquist_analysis}
 \caption{Nyquist analysis. Left: learned frequency distribution with the Nyquist limit
 at $\omega = \pi$ (red dashed line). 25.2\% of dimensions exceed this threshold.
 Right: multi-gap accuracy with original vs.\ Nyquist-clamped frequencies. Clamping
@@ -783,7 +783,149 @@ improve temporal robustness in artificial neural networks, opening a path toward
 that maintain useful internal representations even in the absence of external input.
 
 % ============================================================================
-\bibliography{references}
+% Bibliography inlined for arXiv submission
+\begin{thebibliography}{22}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Buzs{\'a}ki(2006)]{buzsaki2006rhythms}
+Gy{\"o}rgy Buzs{\'a}ki.
+\newblock \emph{Rhythms of the Brain}.
+\newblock Oxford University Press, 2006.
+
+\bibitem[Che et~al.(2018)Che, Purushotham, Cho, Sontag, and
+  Liu]{che2018recurrent}
+Zhengping Che, Sanjay Purushotham, Kyunghyun Cho, David Sontag, and Yan Liu.
+\newblock Recurrent neural networks for multivariate time series with missing
+  values.
+\newblock In \emph{Scientific Reports}, volume~8, page 6085, 2018.
+
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{chen2018neural}
+Ricky T.~Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David~K Duvenaud.
+\newblock Neural ordinary differential equations.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~31, 2018.
+
+\bibitem[Cho et~al.(2014)Cho, Van~Merri{\"e}nboer, Gulcehre, Bahdanau,
+  Bougares, Schwenk, and Bengio]{cho2014learning}
+Kyunghyun Cho, Bart Van~Merri{\"e}nboer, Caglar Gulcehre, Dzmitry Bahdanau,
+  Fethi Bougares, Holger Schwenk, and Yoshua Bengio.
+\newblock Learning phrase representations using {RNN} encoder-decoder for
+  statistical machine translation.
+\newblock \emph{arXiv preprint arXiv:1406.1078}, 2014.
+
+\bibitem[Fuster and Alexander(1971)]{fuster1971neuron}
+Joaquin~M Fuster and Garrett~E Alexander.
+\newblock Neuron activity related to short-term memory.
+\newblock \emph{Science}, 173\penalty0 (3997):\penalty0 652--654, 1971.
+
+\bibitem[Goodfellow et~al.(2015)Goodfellow, Shlens, and
+  Szegedy]{goodfellow2015explaining}
+Ian~J Goodfellow, Jonathon Shlens, and Christian Szegedy.
+\newblock Explaining and harnessing adversarial examples.
+\newblock In \emph{International Conference on Learning Representations}, 2015.
+
+\bibitem[Gu and Dao(2023)]{gu2023mamba}
+Albert Gu and Tri Dao.
+\newblock Mamba: Linear-time sequence modeling with selective state spaces.
+\newblock \emph{arXiv preprint arXiv:2312.00752}, 2023.
+
+\bibitem[Gu et~al.(2022)Gu, Goel, and R{\'e}]{gu2022efficiently}
+Albert Gu, Karan Goel, and Christopher R{\'e}.
+\newblock Efficiently modeling long sequences with structured state spaces.
+\newblock In \emph{International Conference on Learning Representations}, 2022.
+
+\bibitem[Hasani et~al.(2021)Hasani, Lechner, Amini, Liebenwein, Ray,
+  Tschaikowski, Teschl, and Rus]{hasani2021liquid}
+Ramin Hasani, Mathias Lechner, Alexander Amini, Lucas Liebenwein, Aaron Ray,
+  Max Tschaikowski, Gerald Teschl, and Daniela Rus.
+\newblock Liquid time-constant networks.
+\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
+  35\penalty0 (9):\penalty0 7657--7666, 2021.
+
+\bibitem[Hasani et~al.(2022)Hasani, Lechner, Amini, Liebenwein, Rus, and
+  Grosu]{hasani2022liquid}
+Ramin Hasani, Mathias Lechner, Alexander Amini, Lucas Liebenwein, Daniela Rus,
+  and Radu Grosu.
+\newblock Closed-form continuous-time neural networks.
+\newblock \emph{Nature Machine Intelligence}, 4\penalty0 (11):\penalty0
+  992--1003, 2022.
+
+\bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
+Sepp Hochreiter and J{\"u}rgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
+
+\bibitem[Jaeger and Haas(2004)]{jaeger2004harnessing}
+Herbert Jaeger and Harald Haas.
+\newblock Harnessing nonlinearity: Predicting chaotic systems and saving energy
+  in wireless communication.
+\newblock \emph{Science}, 304\penalty0 (5667):\penalty0 78--80, 2004.
+
+\bibitem[Klimesch(2012)]{klimesch2012alpha}
+Wolfgang Klimesch.
+\newblock Alpha-band oscillations, attention, and controlled access to stored
+  information.
+\newblock \emph{Trends in Cognitive Sciences}, 16\penalty0 (12):\penalty0
+  606--617, 2012.
+
+\bibitem[Le et~al.(2015)Le, Jaitly, and Hinton]{le2015simple}
+Quoc~V Le, Navdeep Jaitly, and Geoffrey~E Hinton.
+\newblock A simple way to initialize recurrent networks of rectified linear
+  units.
+\newblock In \emph{arXiv preprint arXiv:1504.00941}, 2015.
+
+\bibitem[Li and Gal(2017)]{pmlr-v70-li17f}
+Yingzhen Li and Yarin Gal.
+\newblock Robust and interpretable machine learning in the physical sciences.
+\newblock In \emph{International Conference on Machine Learning}, 2017.
+
+\bibitem[Lisman(2005)]{lisman2005theta}
+John Lisman.
+\newblock The theta-gamma neural code.
+\newblock \emph{Neuron}, 33\penalty0 (3):\penalty0 325--340, 2005.
+
+\bibitem[Rusch and Mishra(2021)]{rusch2021coupled}
+T.~Konstantin Rusch and Siddhartha Mishra.
+\newblock Coupled oscillatory recurrent neural network ({coRNN}): An accurate
+  and (gradient) stable architecture for learning long time dependencies.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[Shukla and Marlin(2021)]{shukla2021multi}
+Satya~Narayan Shukla and Benjamin~M Marlin.
+\newblock Multi-time attention networks for irregularly sampled time series.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[Singer(1999)]{singer1999neuronal}
+Wolf Singer.
+\newblock Neuronal synchrony: a versatile code for the definition of relations?
+\newblock \emph{Neuron}, 24\penalty0 (1):\penalty0 49--65, 1999.
+
+\bibitem[Tay et~al.(2021)Tay, Bahri, Metzler, Juan, Zhao, and
+  Zheng]{tay2021long}
+Yi~Tay, Dara Bahri, Donald Metzler, Da-Cheng Juan, Zhe Zhao, and Che Zheng.
+\newblock Long range arena: A benchmark for efficient transformers.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[VanRullen(2016)]{vanrullen2016perceptual}
+Rufin VanRullen.
+\newblock Perceptual cycles.
+\newblock \emph{Trends in Cognitive Sciences}, 20\penalty0 (10):\penalty0
+  723--735, 2016.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~30, 2017.
+
+\end{thebibliography}
 
 % ============================================================================
 \appendix
