@@ -14,6 +14,8 @@ runs/
 .DS_Store
 .env
 
+arxiv_submission/
+
 # LaTeX build artifacts
 *.aux
 *.bbl
