@@ -274,9 +274,9 @@ Algorithm~\ref{alg:pdna} summarizes the forward pass.
 \node[block=blue, below=0.7cm of input] (cfc) {\cfc{} Backbone};
 \node[lab, right=0.15cm of cfc] {$B {\times} T {\times} d$};
 
-\node[op, below=0.7cm of cfc] (add1) {$+$};
+\node[op, below=0.9cm of cfc] (add1) {$+$};
 
-\node[op, below=0.7cm of add1] (add2) {$+$};
+\node[op, below=0.9cm of add1] (add2) {$+$};
 
 \node[block=black, below=0.7cm of add2] (cls) {Classifier};
 \node[lab, right=0.15cm of cls] {$h[:, {-}1, :]$};
@@ -291,24 +291,26 @@ Algorithm~\ref{alg:pdna} summarizes the forward pass.
 \draw[arr] (cls) -- (out);
 
 % === Pulse Module (left of add1) ===
-\node[modbox=green!70!black, left=1.8cm of add1]
+\node[modbox=green!70!black, left=2.0cm of add1]
     (pulse) {\textbf{Pulse Module}\\[2pt]
     $\alpha \!\cdot\! A \!\cdot\! \sin(\omega t + \varphi(h))$};
 
+% Output: pulse → add1
 \draw[arr, green!50!black] (pulse) -- node[above, lab] {$\alpha \!\cdot\! p$} (add1);
-\draw[arr, green!50!black, densely dashed]
-    ($(cfc.south)!0.5!(add1.north)$) -- ++(-2.7,0) |- (pulse.west);
-\node[lab] at ($(cfc.south)!0.5!(add1.north)+(-1.35,-0.15)$) {$h_\text{cfc},\; t$};
+% Feed-in: spine → pulse (diagonal from above)
+\coordinate (feed1) at ($(cfc.south)!0.4!(add1.north)$);
+\draw[arr, green!50!black, densely dashed] (feed1) -- node[above, lab, pos=0.4] {$h_\text{cfc},\; t$} (pulse.north east);
 
 % === Self-Attend Module (right of add2) ===
-\node[modbox=purple, right=1.8cm of add2]
+\node[modbox=purple, right=2.0cm of add2]
     (sa) {\textbf{Self-Attend Module}\\[2pt]
     $\beta \!\cdot\! W_\text{self} \!\cdot\! \sigma(h)$};
 
+% Output: self-attend → add2
 \draw[arr, purple!60] (sa) -- node[above, lab] {$\beta \!\cdot\! s$} (add2);
-\draw[arr, purple!60, densely dashed]
-    ($(add1.south)!0.5!(add2.north)$) -- ++(2.7,0) |- (sa.east);
-\node[lab] at ($(add1.south)!0.5!(add2.north)+(1.35,-0.15)$) {$h_\text{pulse}$};
+% Feed-in: spine → self-attend (diagonal from above)
+\coordinate (feed2) at ($(add1.south)!0.4!(add2.north)$);
+\draw[arr, purple!60, densely dashed] (feed2) -- node[above, lab, pos=0.4] {$h_\text{pulse}$} (sa.north west);
 
 \end{tikzpicture}
 \caption{The \pdna{} architecture. Input sequences are processed by the \cfc{} backbone,
