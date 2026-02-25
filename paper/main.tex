@@ -147,7 +147,9 @@ processing~\citep{klimesch2012alpha}. In artificial systems, oscillatory compone
 been explored in reservoir computing~\citep{jaeger2004harnessing} and coupled
 oscillatory recurrent neural networks (coRNN)~\citep{rusch2021coupled}. coRNN uses
 second-order ODEs to create oscillatory hidden state dynamics, achieving strong results
-on long-range tasks. Our approach differs in three key ways: (1) we add oscillation as a
+on long-range tasks. Rhythmic sharing~\citep{kang2025rhythmic} demonstrates that
+link oscillation coordination enables zero-shot context adaptation, further highlighting
+the versatility of oscillatory mechanisms. Our approach differs in three key ways: (1) we add oscillation as a
 \emph{modular augmentation} to an existing architecture (CfC) rather than redesigning
 the core dynamics, (2) our pulse has state-dependent phase $\varphi(h)$ enabling
 context-sensitive oscillation, and (3) we specifically study \emph{gap robustness}
@@ -863,7 +865,7 @@ that maintain useful internal representations even in the absence of external in
 % ============================================================================
 % Bibliography inlined for arXiv submission
 \newpage
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -951,6 +953,12 @@ Herbert Jaeger and Harald Haas.
 \newblock Harnessing nonlinearity: Predicting chaotic systems and saving energy
   in wireless communication.
 \newblock \emph{Science}, 304\penalty0 (5667):\penalty0 78--80, 2004.
+
+\bibitem[Kang and Losert(2025)]{kang2025rhythmic}
+Hoony Kang and Wolfgang Losert.
+\newblock Rhythmic sharing: A bio-inspired paradigm for zero-shot adaptive
+  learning in neural networks.
+\newblock \emph{arXiv preprint arXiv:2502.08644}, 2025.
 
 \bibitem[Klimesch(2012)]{klimesch2012alpha}
 Wolfgang Klimesch.
