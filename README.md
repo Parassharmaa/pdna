@@ -4,7 +4,7 @@
 
 Built on [CfC (Closed-form Continuous-time)](https://arxiv.org/abs/2106.13898) recurrent networks, augmented with learnable oscillatory dynamics and state-dependent self-attention.
 
-> **Paper:** [`paper/main.tex`](paper/main.tex) — full arXiv-ready manuscript with statistical analysis
+> **Paper:** [arXiv:2603.00153](https://arxiv.org/abs/2603.00153)
 
 ## The Idea
 
